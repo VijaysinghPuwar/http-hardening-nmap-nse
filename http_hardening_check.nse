@@ -28,7 +28,7 @@ Emits a concise, grep/CSV-friendly finding line per host/port.
 -- |_  target=10.20.30.31 port=80
 --
 
-author = "Vijay & ChatGPT"
+author = "Vijaysingh"
 license = "Same as Nmap--See https://nmap.org/book/man-legal.html"
 categories = {"safe","discovery","default"}
 
