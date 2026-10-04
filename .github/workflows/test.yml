@@ -1,0 +1,17 @@
+name: test
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  lab:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Nmap
+        run: sudo apt-get update && sudo apt-get install -y nmap
+      - name: Script loads
+        run: nmap --script-help ./http-hardening-check.nse
+      - name: End-to-end tests against the lab
+        run: python3 -m unittest -v tests/test_lab.py
