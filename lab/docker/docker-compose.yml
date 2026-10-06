@@ -1,0 +1,55 @@
+# Reproducible demo lab for http-hardening-check.
+#
+# The targets are INTENTIONALLY INSECURE. They sit on an internal network with
+# no published ports: nothing is reachable from the host or the internet, and
+# the only client is the scanner container.
+#
+#   make lab-up     build and start the targets
+#   make scan       run Nmap + the script from the scanner container
+#   make lab-down   stop and remove everything
+
+name: hhc-lab
+
+services:
+  nginx:
+    build: ./nginx
+    networks:
+      lab:
+        aliases: [hardened.lab, weak.lab, spa.lab]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/healthz"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  apache:
+    build: ./apache
+    networks:
+      lab:
+        aliases: [mixed.lab]
+    healthcheck:
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1/"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+
+  scanner:
+    build:
+      context: ../..
+      dockerfile: lab/docker/scanner/Dockerfile
+    profiles: [scan]
+    user: "${HHC_UID:-1000}:${HHC_GID:-1000}"
+    cap_drop: [ALL]
+    security_opt: ["no-new-privileges:true"]
+    read_only: true
+    tmpfs: [/tmp]
+    volumes:
+      - ./out:/out
+    networks: [lab]
+    depends_on:
+      nginx: {condition: service_healthy}
+      apache: {condition: service_healthy}
+
+networks:
+  lab:
+    internal: true

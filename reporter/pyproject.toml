@@ -1,0 +1,54 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "hhc-report"
+version = "2.0.0"
+description = "Turn http-hardening-check Nmap results into JSON, CSV, Markdown, HTML and SARIF, and gate CI on them."
+readme = "README.md"
+requires-python = ">=3.10"
+license-files = ["LICENSE"]
+authors = [{ name = "Vijaysingh Puwar" }]
+keywords = ["nmap", "security-headers", "sarif", "devsecops", "appsec"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Topic :: Security",
+  "Environment :: Console",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = ["pytest>=8", "ruff>=0.6", "mypy>=1.10", "jsonschema>=4.21"]
+
+[project.scripts]
+hhc-report = "hhc_report.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/VijaysinghPuwar/http-hardening-nmap-nse"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+hhc_report = ["report.schema.json", "py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = ["S101", "S603", "S607"]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = ["S108", "S310", "S314"]
+# Embedded CSS and HTML template strings; the formatter cannot split them.
+"src/hhc_report/html_report.py" = ["E501"]
+
+[tool.mypy]
+strict = true
+python_version = "3.10"

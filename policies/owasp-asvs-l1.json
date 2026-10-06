@@ -1,0 +1,18 @@
+{
+  "$schema": "./policy.schema.json",
+  "name": "owasp-asvs-l1",
+  "description": "The HTTP header and cookie requirements of OWASP ASVS 4.0.3 Level 1 that can be tested from outside (V3.4, V14.3.3, V14.4, V14.5). Passing it does not make an application ASVS compliant.",
+  "fail_on": "low",
+  "hsts": {
+    "min_max_age": 15724800,
+    "require_include_subdomains": true,
+    "require_preload": false
+  },
+  "checks": {
+    "referrer-policy-missing": {"severity": "low"},
+    "cookie-no-samesite": {"severity": "low"},
+    "tech-disclosure": {"severity": "low"},
+    "csp-no-base-uri": {"enabled": false},
+    "permissions-policy-missing": {"enabled": false}
+  }
+}

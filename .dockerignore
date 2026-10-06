@@ -1,0 +1,9 @@
+# Only the scanner image uses the repository root as build context.
+*
+!http-hardening-check.nse
+!policies/
+!reporter/
+!lab/docker/scanner/
+reporter/tests/
+**/__pycache__/
+**/*.egg-info/

@@ -1,4 +1,19 @@
-cert.pem
-key.pem
+# Python
 __pycache__/
-*.xml
+*.egg-info/
+.venv/
+build/
+dist/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Lab certificates are generated at runtime and never committed
+lab/cert.pem
+lab/key.pem
+
+# Scan output (fixtures under reporter/tests/fixtures are committed)
+/*.xml
+/scan*.xml
+/hhc-report/
+lab.log

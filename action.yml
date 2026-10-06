@@ -1,0 +1,74 @@
+name: HTTP hardening check
+description: Scan web services you are authorized to test with Nmap and http-hardening-check, and fail on findings.
+author: Vijaysingh Puwar
+branding:
+  icon: shield
+  color: blue
+
+inputs:
+  targets:
+    description: Space-separated host names or IP addresses. Public addresses are refused unless allow-public-targets is true.
+    required: true
+  ports:
+    description: Ports to scan, Nmap syntax (80,443 or 8000-8100).
+    default: "80,443"
+  policy:
+    description: baseline, strict, owasp-asvs-l1, or a path to a policy JSON file in your repository.
+    default: baseline
+  fail-on:
+    description: critical, high, medium, low, info, policy (each target's policy decides) or none.
+    default: policy
+  exposure:
+    description: "true to probe the built-in sensitive paths and TRACE (more requests)."
+    default: "false"
+  baseline:
+    description: Previous hhc-report JSON; only new findings fail the job.
+    default: ""
+  output-dir:
+    description: Directory for scan.xml and the JSON, HTML, Markdown and SARIF reports.
+    default: hhc-report
+  sarif-artifact:
+    description: Repository file that SARIF results point at (for example your web server config).
+    default: ""
+  allow-public-targets:
+    description: Set to true only for systems you own or are explicitly authorized to test.
+    default: "false"
+
+outputs:
+  report-dir:
+    description: Directory containing the reports.
+    value: ${{ steps.scan.outputs.report-dir }}
+  sarif-file:
+    description: Path of the SARIF report.
+    value: ${{ steps.scan.outputs.sarif-file }}
+
+runs:
+  using: composite
+  steps:
+    - name: Install Nmap and hhc-report
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+      run: |
+        if ! command -v nmap >/dev/null; then
+          sudo apt-get update -qq && sudo apt-get install -y -qq nmap
+        fi
+        # A private venv: the runner's system Python is externally managed (PEP 668).
+        python3 -m venv "$RUNNER_TEMP/hhc-venv"
+        "$RUNNER_TEMP/hhc-venv/bin/pip" install --quiet "$ACTION_PATH/reporter"
+        echo "$RUNNER_TEMP/hhc-venv/bin" >> "$GITHUB_PATH"
+    - name: Scan and report
+      id: scan
+      shell: bash
+      env:
+        ACTION_PATH: ${{ github.action_path }}
+        HHC_TARGETS: ${{ inputs.targets }}
+        HHC_PORTS: ${{ inputs.ports }}
+        HHC_POLICY: ${{ inputs.policy }}
+        HHC_FAIL_ON: ${{ inputs.fail-on }}
+        HHC_EXPOSURE: ${{ inputs.exposure }}
+        HHC_BASELINE: ${{ inputs.baseline }}
+        HHC_OUTPUT_DIR: ${{ inputs.output-dir }}
+        HHC_SARIF_ARTIFACT: ${{ inputs.sarif-artifact }}
+        HHC_ALLOW_PUBLIC: ${{ inputs.allow-public-targets }}
+      run: '"$ACTION_PATH/action/run.sh"'

@@ -1,0 +1,6 @@
+# Lint settings for tests/ and lab/; reporter/ has its own in pyproject.toml.
+extend = "reporter/pyproject.toml"
+
+[lint.per-file-ignores]
+"tests/**" = ["S108", "S310", "S314", "E402"]
+"lab/**" = ["S104"]
