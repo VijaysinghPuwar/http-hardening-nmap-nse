@@ -1,0 +1,23 @@
+{
+  "$schema": "./policy.schema.json",
+  "name": "strict",
+  "description": "For sites that already pass baseline. One-year HSTS with subdomains, stricter CSP and cookie rules, fails on LOW.",
+  "fail_on": "low",
+  "hsts": {
+    "min_max_age": 31536000,
+    "require_include_subdomains": true,
+    "require_preload": false
+  },
+  "checks": {
+    "hsts-no-preload": {"enabled": true, "severity": "info"},
+    "csp-report-only": {"severity": "medium"},
+    "csp-unsafe-eval": {"severity": "medium"},
+    "csp-no-base-uri": {"severity": "low"},
+    "cookie-no-httponly": {"severity": "medium"},
+    "cookie-no-samesite": {"severity": "low"},
+    "referrer-policy-missing": {"severity": "low"},
+    "permissions-policy-missing": {"severity": "low"},
+    "tech-disclosure": {"severity": "low"},
+    "cross-origin-isolation-missing": {"enabled": true, "severity": "info"}
+  }
+}

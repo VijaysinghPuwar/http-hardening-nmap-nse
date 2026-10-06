@@ -1,0 +1,19 @@
+{
+  "$schema": "./policy.schema.json",
+  "name": "baseline",
+  "description": "Default policy, identical to the script's built-in settings. Fails on MEDIUM and above.",
+  "fail_on": "medium",
+  "hsts": {
+    "min_max_age": 15768000,
+    "require_include_subdomains": false,
+    "require_preload": false
+  },
+  "exposure": {
+    "enabled": false,
+    "trace": true,
+    "paths": [],
+    "max_paths": 25
+  },
+  "skip": [],
+  "checks": {}
+}

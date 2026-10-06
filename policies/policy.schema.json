@@ -1,0 +1,155 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/VijaysinghPuwar/http-hardening-nmap-nse/policies/policy.schema.json",
+  "title": "http-hardening-check policy",
+  "description": "Policy file for http-hardening-check.nse. Every key is optional; omitted keys keep the baseline value. See docs/policy.md.",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "$schema": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "description": {
+      "type": "string"
+    },
+    "fail_on": {
+      "type": "string",
+      "enum": [
+        "critical",
+        "high",
+        "medium",
+        "low",
+        "info"
+      ]
+    },
+    "hsts": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "min_max_age": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "require_include_subdomains": {
+          "type": "boolean"
+        },
+        "require_preload": {
+          "type": "boolean"
+        }
+      }
+    },
+    "exposure": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "enabled": {
+          "type": "boolean"
+        },
+        "trace": {
+          "type": "boolean"
+        },
+        "paths": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "max_paths": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "skip": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/check_id"
+      }
+    },
+    "checks": {
+      "type": "object",
+      "propertyNames": {
+        "$ref": "#/$defs/check_id"
+      },
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "severity": {
+            "type": "string",
+            "enum": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "check_id": {
+      "type": "string",
+      "enum": [
+        "admin-interface-reachable",
+        "cookie-flags-nonsession",
+        "cookie-no-httponly",
+        "cookie-no-samesite",
+        "cookie-no-secure",
+        "cookie-samesite-none-insecure",
+        "cors-reflected-credentials",
+        "cors-reflected-origin",
+        "cors-wildcard-credentials",
+        "cross-origin-isolation-missing",
+        "csp-broad-script-source",
+        "csp-missing",
+        "csp-no-base-uri",
+        "csp-no-object-src",
+        "csp-no-script-restriction",
+        "csp-report-only",
+        "csp-unsafe-eval",
+        "csp-unsafe-inline",
+        "directory-listing",
+        "expect-ct-present",
+        "exposed-actuator-env",
+        "exposed-backup-archive",
+        "exposed-ds-store",
+        "exposed-env",
+        "exposed-git",
+        "exposed-phpinfo",
+        "exposed-server-status",
+        "framing-allowed",
+        "framing-missing",
+        "hpkp-present",
+        "hsts-disabled",
+        "hsts-invalid",
+        "hsts-missing",
+        "hsts-no-preload",
+        "hsts-no-subdomains",
+        "hsts-over-http",
+        "hsts-short-max-age",
+        "info-disclosure",
+        "no-https-redirect",
+        "path-exposed",
+        "permissions-policy-missing",
+        "permissions-policy-permissive",
+        "referrer-policy-leaky",
+        "referrer-policy-missing",
+        "tech-disclosure",
+        "trace-enabled",
+        "xcto-missing",
+        "xxp-enabled"
+      ]
+    }
+  }
+}
