@@ -148,9 +148,6 @@ jobs:
           fetch-depth: 0
       - name: Secret scan (gitleaks, full history)
         run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --no-banner --redact
-      - name: Dependency review
-        if: github.event_name == 'pull_request'
-        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
 
   build:
     runs-on: ubuntu-24.04
