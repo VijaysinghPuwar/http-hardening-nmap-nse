@@ -1,0 +1,172 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+# Least privilege: every job only reads the repository.
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: reporter/pyproject.toml
+      - name: Install tools
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq lua-check
+          python -m pip install -e "reporter[dev]"
+      - name: Lua lint
+        run: luacheck http-hardening-check.nse tests/unit
+      - name: Python lint and format
+        run: |
+          ruff check .
+          ruff format --check .
+      - name: Type check
+        run: mypy reporter/src
+      - name: No em dashes
+        run: python3 scripts/check_text.py
+
+  unit:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Install Lua 5.4 (the version Nmap embeds)
+        run: sudo apt-get update -qq && sudo apt-get install -y -qq lua5.4
+      - name: Engine unit tests
+        run: lua5.4 tests/unit/test_engine.lua
+
+  reporter:
+    runs-on: ubuntu-24.04
+    strategy:
+      matrix:
+        python: ["3.10", "3.13"]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: ${{ matrix.python }}
+          cache: pip
+          cache-dependency-path: reporter/pyproject.toml
+      - run: python -m pip install -e "reporter[dev]"
+      - name: Reporter tests (SARIF validated against the official 2.1.0 schema)
+        working-directory: reporter
+        run: pytest -q
+
+  integration:
+    runs-on: ubuntu-24.04
+    needs: [unit, reporter]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: reporter/pyproject.toml
+      - name: Install Nmap, Lua and hhc-report
+        run: |
+          sudo apt-get update -qq && sudo apt-get install -y -qq nmap lua5.4
+          nmap --version | head -1
+          python -m pip install -e "reporter[dev]"
+      - name: Script loads
+        run: nmap --script-help ./http-hardening-check.nse
+      - name: Python lab, Docker lab, stress and action-guard tests
+        env:
+          HHC_REQUIRE_DOCKER: "1"
+        run: pytest -q tests
+      - name: Upload demo reports
+        if: always()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: docker-lab-reports
+          path: lab/docker/out/
+          if-no-files-found: ignore
+          retention-days: 7
+
+  action:
+    runs-on: ubuntu-24.04
+    needs: [unit]
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - name: Start the local lab
+        run: |
+          nohup python3 lab/server.py > lab.log 2>&1 &
+          sleep 2
+      - name: Run this repository's action against the lab
+        id: hhc
+        uses: ./
+        with:
+          targets: 127.0.0.1
+          ports: "8443,8444,8445"
+          fail-on: critical
+      - name: Check outputs
+        env:
+          REPORT_DIR: ${{ steps.hhc.outputs.report-dir }}
+          SARIF: ${{ steps.hhc.outputs.sarif-file }}
+        run: |
+          test -s "$SARIF"
+          for f in scan.xml report.json report.html report.md report.sarif; do test -s "$REPORT_DIR/$f"; done
+      - name: The action refuses public targets
+        id: refused
+        continue-on-error: true
+        uses: ./
+        with:
+          targets: 8.8.8.8
+      - name: Check the refusal
+        env:
+          OUTCOME: ${{ steps.refused.outcome }}
+        run: test "$OUTCOME" = "failure"
+
+  security:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - name: Secret scan (gitleaks, full history)
+        run: docker run --rm -v "$PWD:/repo" ghcr.io/gitleaks/gitleaks:v8.30.1 git /repo --no-banner --redact
+      - name: Dependency review
+        if: github.event_name == 'pull_request'
+        uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+
+  build:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version: "3.12"
+      - name: Build sdist and wheel
+        run: |
+          python -m pip install build
+          python -m build reporter
+      - name: Install the wheel in a clean venv
+        run: |
+          python -m venv /tmp/clean
+          /tmp/clean/bin/pip install reporter/dist/*.whl
+          /tmp/clean/bin/hhc-report --version
