@@ -1,0 +1,549 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/VijaysinghPuwar/http-hardening-nmap-nse/reporter/report.schema.json",
+  "title": "hhc-report JSON report",
+  "description": "Output of hhc-report --format json, schema_version 1.0. Fields are added only in a new minor schema_version and never removed or renamed within 1.x.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "tool",
+    "scan",
+    "summary",
+    "targets",
+    "baseline",
+    "gate"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "1.0"
+    },
+    "tool": {
+      "type": "object",
+      "required": [
+        "name",
+        "version",
+        "script"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "const": "hhc-report"
+        },
+        "version": {
+          "type": "string"
+        },
+        "script": {
+          "const": "http-hardening-check"
+        }
+      }
+    },
+    "scan": {
+      "type": "object",
+      "required": [
+        "files",
+        "nmap_versions",
+        "started"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "nmap_versions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "started": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "description": "Unix time the earliest scan started (from the Nmap XML)"
+        }
+      }
+    },
+    "summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "targets",
+        "passed",
+        "failed",
+        "errors",
+        "findings",
+        "lowest_score",
+        "worst_grade"
+      ],
+      "properties": {
+        "targets": {
+          "type": "integer"
+        },
+        "passed": {
+          "type": "integer"
+        },
+        "failed": {
+          "type": "integer"
+        },
+        "errors": {
+          "type": "integer"
+        },
+        "findings": {
+          "type": "object",
+          "required": [
+            "critical",
+            "high",
+            "medium",
+            "low",
+            "info"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "critical": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "high": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "medium": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "low": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "info": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        },
+        "lowest_score": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "worst_grade": {
+          "enum": [
+            null,
+            "A",
+            "B",
+            "C",
+            "D",
+            "F"
+          ]
+        }
+      }
+    },
+    "targets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "key",
+          "host",
+          "port",
+          "url",
+          "status",
+          "result",
+          "score",
+          "grade",
+          "policy",
+          "fail_on",
+          "error",
+          "error_detail",
+          "note",
+          "requests",
+          "counts",
+          "findings",
+          "passed",
+          "paths",
+          "warnings"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer"
+          },
+          "url": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "status": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "result": {
+            "enum": [
+              "PASS",
+              "FAIL",
+              "ERROR"
+            ]
+          },
+          "score": {
+            "type": [
+              "integer",
+              "null"
+            ],
+            "minimum": 0,
+            "maximum": 100
+          },
+          "grade": {
+            "enum": [
+              null,
+              "A",
+              "B",
+              "C",
+              "D",
+              "F"
+            ]
+          },
+          "policy": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "fail_on": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "error_detail": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "note": {
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "requests": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "counts": {
+            "type": "object",
+            "required": [
+              "critical",
+              "high",
+              "medium",
+              "low",
+              "info"
+            ],
+            "additionalProperties": false,
+            "properties": {
+              "critical": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "high": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "medium": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "low": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "info": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          "findings": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "id",
+                "severity",
+                "title",
+                "detail",
+                "evidence",
+                "path",
+                "cwe",
+                "owasp",
+                "asvs",
+                "recommendation",
+                "fingerprint",
+                "baseline"
+              ],
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "severity": {
+                  "enum": [
+                    "critical",
+                    "high",
+                    "medium",
+                    "low",
+                    "info"
+                  ]
+                },
+                "title": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "detail": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "evidence": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "path": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "cwe": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "pattern": "^CWE-[0-9]+$"
+                },
+                "owasp": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "asvs": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "recommendation": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "pattern": "^[0-9a-f]{16}$"
+                },
+                "baseline": {
+                  "enum": [
+                    null,
+                    "new",
+                    "existing"
+                  ]
+                }
+              }
+            }
+          },
+          "passed": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "paths": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": [
+                "path",
+                "status",
+                "verdict"
+              ],
+              "properties": {
+                "path": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                },
+                "status": {
+                  "type": [
+                    "integer",
+                    "null"
+                  ]
+                },
+                "verdict": {
+                  "type": [
+                    "string",
+                    "null"
+                  ]
+                }
+              }
+            }
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      }
+    },
+    "baseline": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "file",
+            "new",
+            "existing",
+            "resolved"
+          ],
+          "properties": {
+            "file": {
+              "type": "string"
+            },
+            "new": {
+              "type": "integer"
+            },
+            "existing": {
+              "type": "integer"
+            },
+            "resolved": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": [
+                  "fingerprint",
+                  "id"
+                ],
+                "properties": {
+                  "fingerprint": {
+                    "type": "string"
+                  },
+                  "id": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "target": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "severity": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  },
+                  "detail": {
+                    "type": [
+                      "string",
+                      "null"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "gate": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "fail_on",
+            "only_new",
+            "fail_on_error",
+            "failing_findings",
+            "failed",
+            "reasons"
+          ],
+          "properties": {
+            "fail_on": {
+              "enum": [
+                "critical",
+                "high",
+                "medium",
+                "low",
+                "info",
+                "policy",
+                "none"
+              ]
+            },
+            "only_new": {
+              "type": "boolean"
+            },
+            "fail_on_error": {
+              "type": "boolean"
+            },
+            "failing_findings": {
+              "type": "integer"
+            },
+            "failed": {
+              "type": "boolean"
+            },
+            "reasons": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

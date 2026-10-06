@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<!-- Nmap scan of the local test lab (command line removed) -->
+<nmaprun scanner="nmap" args="nmap (removed)" start="1791250345" startstr="Mon Oct  5 21:32:25 2026" version="7.991" xmloutputversion="1.05">
+<scaninfo type="connect" protocol="tcp" numservices="1" services="8444"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1791250345" endtime="1791250361"><status state="up" reason="user-set" reason_ttl="0"/>
+<address addr="127.0.0.1" addrtype="ipv4"/>
+<hostnames>
+<hostname name="localhost" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="8444"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="nginx" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx</cpe></service><script id="http-hardening-check" output="&#xa;  url: https://app.lab.test:8444/ (200)&#xa;  result: PASS  score: 100/100  grade: A  policy: baseline&#xa;  summary: critical=0 high=0 medium=0 low=0 info=0 (fail-on=medium)&#xa;  passed: hsts, csp, framing, x-content-type-options, referrer-policy, permissions-policy, cookies&#xa;"><elem key="url">https://app.lab.test:8444/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">PASS</elem>
+<elem key="score">100</elem>
+<elem key="grade">A</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=0 medium=0 low=0 info=0</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">0</elem>
+<elem key="medium">0</elem>
+<elem key="low">0</elem>
+<elem key="info">0</elem>
+</table>
+<table key="findings">
+</table>
+<table key="passed">
+<elem>hsts</elem>
+<elem>csp</elem>
+<elem>framing</elem>
+<elem>x-content-type-options</elem>
+<elem>referrer-policy</elem>
+<elem>permissions-policy</elem>
+<elem>cookies</elem>
+</table>
+<elem key="requests">1</elem>
+</script></port>
+</ports>
+<times srtt="93" rttvar="5000" to="100000"/>
+</host>
+<runstats><finished time="1791250361" timestr="Mon Oct  5 21:32:41 2026" summary="Nmap done at Mon Oct  5 21:32:41 2026; 1 IP address (1 host up) scanned in 16.12 seconds" elapsed="16.12" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

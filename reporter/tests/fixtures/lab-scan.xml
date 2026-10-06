@@ -1,0 +1,993 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE nmaprun>
+<!-- Nmap scan of the local test lab (command line removed) -->
+<nmaprun scanner="nmap" args="nmap (removed)" start="1791250329" startstr="Mon Oct  5 21:32:09 2026" version="7.991" xmloutputversion="1.05">
+<scaninfo type="connect" protocol="tcp" numservices="7" services="8000,8080-8082,8180,8443,8445"/>
+<verbose level="0"/>
+<debugging level="0"/>
+<host starttime="1791250329" endtime="1791250345"><status state="up" reason="user-set" reason_ttl="0"/>
+<address addr="127.0.0.1" addrtype="ipv4"/>
+<hostnames>
+<hostname name="localhost" type="PTR"/>
+</hostnames>
+<ports><port protocol="tcp" portid="8000"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http-alt" servicefp="SF-Port8000-TCP:V=7.991%I=7%D=10/5%Time=6AC44F9E%P=arm-apple-darwin25.6.0%r(GenericLines,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(GetRequest,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(X11Probe,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(FourOhFourRequest,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(Socks5,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(Socks4,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(HTTPOptions,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(RTSPRequest,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(RPCCheck,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(DNSVersionBindReqTCP,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(DNSStatusRequestTCP,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(Help,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(SSLSessionReq,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(TerminalServerCookie,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(TLSSessionReq,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(Kerberos,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(SMBProgNeg,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(LPDString,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(LDAPSearchReq,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(LDAPBindReq,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(SIPOptions,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(LANDesk-RC,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(TerminalServer,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(NCP,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(NotesRPC,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(JavaRMI,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(WMSRequest,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(oracle-tns,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(ms-sql-s,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(afp,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;)%r(giop,17,&quot;\0\x01\x20this\x20is\x20not\x20HTTP\r\n\r\n&quot;);" method="table" conf="3"/><script id="fingerprint-strings" output="&#xa;  DNSStatusRequestTCP, DNSVersionBindReqTCP, FourOhFourRequest, GenericLines, GetRequest, HTTPOptions, Help, JavaRMI, Kerberos, LANDesk-RC, LDAPBindReq, LDAPSearchReq, LPDString, NCP, NotesRPC, RPCCheck, RTSPRequest, SIPOptions, SMBProgNeg, SSLSessionReq, Socks4, Socks5, TLSSessionReq, TerminalServer, TerminalServerCookie, WMSRequest, X11Probe, afp, giop, ms-sql-s, oracle-tns: &#xa;    this is not HTTP"><elem key="DNSStatusRequestTCP, DNSVersionBindReqTCP, FourOhFourRequest, GenericLines, GetRequest, HTTPOptions, Help, JavaRMI, Kerberos, LANDesk-RC, LDAPBindReq, LDAPSearchReq, LPDString, NCP, NotesRPC, RPCCheck, RTSPRequest, SIPOptions, SMBProgNeg, SSLSessionReq, Socks4, Socks5, TLSSessionReq, TerminalServer, TerminalServerCookie, WMSRequest, X11Probe, afp, giop, ms-sql-s, oracle-tns">&#xa;    this is not HTTP</elem>
+</script><script id="http-hardening-check" output="&#xa;  url: http://localhost:8000/ (-)&#xa;  result: ERROR (unsupported-response: Error in next_response function; Error parsing status-line &quot;\0\1 this is not HTTP\13\ &quot;.)&#xa;"><elem key="url">http://localhost:8000/</elem>
+<elem key="policy">baseline</elem>
+<elem key="requests">1</elem>
+<elem key="result">ERROR</elem>
+<elem key="error">unsupported-response</elem>
+<elem key="error_detail">Error in next_response function; Error parsing status-line &quot;\0\1 this is not HTTP\13\ &quot;.</elem>
+</script></port>
+<port protocol="tcp" portid="8080"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="nginx" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx</cpe></service><script id="http-hardening-check" output="&#xa;  url: http://localhost:8080/ (301)&#xa;  note: redirects (301) to https://localhost:8444/; headers are judged on the HTTPS port&#xa;  result: PASS  score: 100/100  grade: A  policy: baseline&#xa;  summary: critical=0 high=0 medium=0 low=0 info=0 (fail-on=medium)&#xa;  passed: https-redirect&#xa;  paths:&#xa;    /.git/HEAD      301  redirect -&gt; https://localhost:8444/&#xa;    /.env           301  redirect -&gt; https://localhost:8444/&#xa;    /server-status  301  redirect -&gt; https://localhost:8444/&#xa;    /actuator/env   301  redirect -&gt; https://localhost:8444/&#xa;    /phpinfo.php    301  redirect -&gt; https://localhost:8444/&#xa;    /.DS_Store      301  redirect -&gt; https://localhost:8444/&#xa;    /backup.zip     301  redirect -&gt; https://localhost:8444/&#xa;    /admin          301  redirect -&gt; https://localhost:8444/&#xa;    /wp-admin/      301  redirect -&gt; https://localhost:8444/&#xa;    TRACE /         405  not enabled&#xa;"><elem key="url">http://localhost:8080/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">301</elem>
+<elem key="note">redirects (301) to https://localhost:8444/; headers are judged on the HTTPS port</elem>
+<elem key="result">PASS</elem>
+<elem key="score">100</elem>
+<elem key="grade">A</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=0 medium=0 low=0 info=0</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">0</elem>
+<elem key="medium">0</elem>
+<elem key="low">0</elem>
+<elem key="info">0</elem>
+</table>
+<table key="findings">
+</table>
+<table key="passed">
+<elem>https-redirect</elem>
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">redirect -&gt; https://localhost:8444/</elem>
+<elem key="status">301</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">not enabled</elem>
+<elem key="status">405</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script></port>
+<port protocol="tcp" portid="8081"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="Apache httpd" version="2.4.41" extrainfo="(Ubuntu)" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.41</cpe></service><script id="http-hardening-check" output="&#xa;  url: http://localhost:8081/ (200)&#xa;  result: FAIL  score: 61/100  grade: D  policy: baseline&#xa;  summary: critical=0 high=0 medium=3 low=3 info=2 (fail-on=medium)&#xa;  MEDIUM   csp-missing                 No Content-Security-Policy header or meta tag&#xa;  MEDIUM   framing-missing             No X-Frame-Options or CSP frame-ancestors&#xa;  MEDIUM   no-https-redirect           Serves content over plain HTTP without redirecting to HTTPS&#xa;  LOW      admin-interface-reachable   /admin returned 200&#xa;  LOW      info-disclosure             Server: Apache/2.4.41 (Ubuntu)&#xa;  LOW      xcto-missing                X-Content-Type-Options is not nosniff&#xa;  INFO     permissions-policy-missing  No Permissions-Policy header&#xa;  INFO     referrer-policy-missing     No Referrer-Policy; the browser default applies&#xa;  paths:&#xa;    /.git/HEAD      404  absent&#xa;    /.env           404  absent&#xa;    /server-status  404  absent&#xa;    /actuator/env   404  absent&#xa;    /phpinfo.php    404  absent&#xa;    /.DS_Store      404  absent&#xa;    /backup.zip     404  absent&#xa;    /admin          200  exposed&#xa;    /wp-admin/      404  absent&#xa;    TRACE /         405  not enabled&#xa;"><elem key="url">http://localhost:8081/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">FAIL</elem>
+<elem key="score">61</elem>
+<elem key="grade">D</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=0 medium=3 low=3 info=2</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">0</elem>
+<elem key="medium">3</elem>
+<elem key="low">3</elem>
+<elem key="info">2</elem>
+</table>
+<table key="findings">
+<table>
+<elem key="id">csp-missing</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Content-Security-Policy missing</elem>
+<elem key="detail">No Content-Security-Policy header or meta tag</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Deploy a CSP that restricts script-src, starting in Report-Only mode.</elem>
+</table>
+<table>
+<elem key="id">framing-missing</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">No clickjacking protection</elem>
+<elem key="detail">No X-Frame-Options or CSP frame-ancestors</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1021</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.7</elem>
+<elem key="recommendation">Add CSP frame-ancestors &apos;none&apos; (or &apos;self&apos;); X-Frame-Options DENY for old browsers.</elem>
+</table>
+<table>
+<elem key="id">no-https-redirect</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Plain HTTP without redirect to HTTPS</elem>
+<elem key="detail">Serves content over plain HTTP without redirecting to HTTPS</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-319</elem>
+<elem key="owasp">A02:2021</elem>
+<elem key="asvs">9.1.1</elem>
+<elem key="recommendation">Redirect all plain HTTP requests to HTTPS with 301 or 308.</elem>
+</table>
+<table>
+<elem key="id">admin-interface-reachable</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Administrative interface reachable</elem>
+<elem key="detail">/admin returned 200</elem>
+<elem key="evidence">HTTP 200</elem>
+<elem key="path">/admin</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="recommendation">Restrict administrative paths by network or authentication.</elem>
+</table>
+<table>
+<elem key="id">info-disclosure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Software version disclosed</elem>
+<elem key="detail">Server: Apache/2.4.41 (Ubuntu)</elem>
+<elem key="evidence">Server: Apache/2.4.41 (Ubuntu)</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.3.3</elem>
+<elem key="recommendation">Remove version numbers from Server and X-Powered-By style headers.</elem>
+</table>
+<table>
+<elem key="id">xcto-missing</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">X-Content-Type-Options is not nosniff</elem>
+<elem key="detail">X-Content-Type-Options is not nosniff</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.4</elem>
+<elem key="recommendation">Send X-Content-Type-Options: nosniff on all responses.</elem>
+</table>
+<table>
+<elem key="id">permissions-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Permissions-Policy missing</elem>
+<elem key="detail">No Permissions-Policy header</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Disable browser features the site does not use, e.g. camera=(), microphone=(), geolocation=().</elem>
+</table>
+<table>
+<elem key="id">referrer-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Referrer-Policy missing or unrecognised</elem>
+<elem key="detail">No Referrer-Policy; the browser default applies</elem>
+<elem key="path">/</elem>
+<elem key="asvs">14.4.6</elem>
+<elem key="recommendation">Send Referrer-Policy: strict-origin-when-cross-origin (or stricter).</elem>
+</table>
+</table>
+<table key="passed">
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">exposed</elem>
+<elem key="status">200</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">not enabled</elem>
+<elem key="status">405</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script><script id="http-server-header" output="Apache/2.4.41 (Ubuntu)"><elem>Apache/2.4.41 (Ubuntu)</elem>
+</script></port>
+<port protocol="tcp" portid="8082"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="Microsoft IIS httpd" version="10.0" ostype="Windows" method="probed" conf="10"><cpe>cpe:/a:microsoft:internet_information_services:10.0</cpe><cpe>cpe:/o:microsoft:windows</cpe></service><script id="http-hardening-check" output="&#xa;  url: http://localhost:8082/ (200)&#xa;  result: FAIL  score: 84/100  grade: B  policy: baseline&#xa;  summary: critical=0 high=0 medium=1 low=2 info=2 (fail-on=medium)&#xa;  MEDIUM   no-https-redirect           Serves content over plain HTTP without redirecting to HTTPS&#xa;  LOW      csp-report-only             CSP is Report-Only, so it is not enforced&#xa;  LOW      info-disclosure             Server: Microsoft-IIS/10.0&#xa;  INFO     hsts-over-http              Strict-Transport-Security sent over plain HTTP is ignored by browsers&#xa;  INFO     permissions-policy-missing  No Permissions-Policy header&#xa;  passed: framing, x-content-type-options, referrer-policy&#xa;  paths:&#xa;    /.git/HEAD      404  absent&#xa;    /.env           404  absent&#xa;    /server-status  404  absent&#xa;    /actuator/env   404  absent&#xa;    /phpinfo.php    404  absent&#xa;    /.DS_Store      404  absent&#xa;    /backup.zip     404  absent&#xa;    /admin          403  protected&#xa;    /wp-admin/      404  absent&#xa;    TRACE /         405  not enabled&#xa;"><elem key="url">http://localhost:8082/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">FAIL</elem>
+<elem key="score">84</elem>
+<elem key="grade">B</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=0 medium=1 low=2 info=2</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">0</elem>
+<elem key="medium">1</elem>
+<elem key="low">2</elem>
+<elem key="info">2</elem>
+</table>
+<table key="findings">
+<table>
+<elem key="id">no-https-redirect</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Plain HTTP without redirect to HTTPS</elem>
+<elem key="detail">Serves content over plain HTTP without redirecting to HTTPS</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-319</elem>
+<elem key="owasp">A02:2021</elem>
+<elem key="asvs">9.1.1</elem>
+<elem key="recommendation">Redirect all plain HTTP requests to HTTPS with 301 or 308.</elem>
+</table>
+<table>
+<elem key="id">csp-report-only</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">CSP is Report-Only and not enforced</elem>
+<elem key="detail">CSP is Report-Only, so it is not enforced</elem>
+<elem key="evidence">Content-Security-Policy-Report-Only: default-src &apos;self&apos;</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Promote the policy to Content-Security-Policy once reports are clean.</elem>
+</table>
+<table>
+<elem key="id">info-disclosure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Software version disclosed</elem>
+<elem key="detail">Server: Microsoft-IIS/10.0</elem>
+<elem key="evidence">Server: Microsoft-IIS/10.0</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.3.3</elem>
+<elem key="recommendation">Remove version numbers from Server and X-Powered-By style headers.</elem>
+</table>
+<table>
+<elem key="id">hsts-over-http</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">HSTS sent over plain HTTP is ignored</elem>
+<elem key="detail">Strict-Transport-Security sent over plain HTTP is ignored by browsers</elem>
+<elem key="evidence">Strict-Transport-Security: max-age=31536000</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Send HSTS on HTTPS responses; redirect plain HTTP to HTTPS.</elem>
+</table>
+<table>
+<elem key="id">permissions-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Permissions-Policy missing</elem>
+<elem key="detail">No Permissions-Policy header</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Disable browser features the site does not use, e.g. camera=(), microphone=(), geolocation=().</elem>
+</table>
+</table>
+<table key="passed">
+<elem>framing</elem>
+<elem>x-content-type-options</elem>
+<elem>referrer-policy</elem>
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">protected</elem>
+<elem key="status">403</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">not enabled</elem>
+<elem key="status">405</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script><script id="http-server-header" output="Microsoft-IIS/10.0"><elem>Microsoft-IIS/10.0</elem>
+</script></port>
+<port protocol="tcp" portid="8180"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="Apache httpd" version="2.4.58" extrainfo="(Unix)" method="probed" conf="10"><cpe>cpe:/a:apache:http_server:2.4.58</cpe></service><script id="http-hardening-check" output="&#xa;  url: http://localhost:8180/ (200)&#xa;  result: FAIL  score: 14/100  grade: F  policy: baseline&#xa;  summary: critical=0 high=2 medium=3 low=2 info=2 (fail-on=medium)&#xa;  HIGH     exposed-env                 /.env returned 200&#xa;  HIGH     exposed-git                 /.git/HEAD returned 200&#xa;  MEDIUM   csp-missing                 No Content-Security-Policy header or meta tag&#xa;  MEDIUM   framing-missing             No X-Frame-Options or CSP frame-ancestors&#xa;  MEDIUM   no-https-redirect           Serves content over plain HTTP without redirecting to HTTPS&#xa;  LOW      info-disclosure             Server: Apache/2.4.58 (Unix)&#xa;  LOW      trace-enabled               TRACE / echoed the request&#xa;  INFO     permissions-policy-missing  No Permissions-Policy header&#xa;  INFO     referrer-policy-missing     No Referrer-Policy; the browser default applies&#xa;  passed: x-content-type-options&#xa;  paths:&#xa;    /.git/HEAD      200  exposed&#xa;    /.env           200  exposed&#xa;    /server-status  404  absent&#xa;    /actuator/env   404  absent&#xa;    /phpinfo.php    404  absent&#xa;    /.DS_Store      404  absent&#xa;    /backup.zip     404  absent&#xa;    /admin          404  absent&#xa;    /wp-admin/      404  absent&#xa;    TRACE /         200  enabled&#xa;"><elem key="url">http://localhost:8180/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">FAIL</elem>
+<elem key="score">14</elem>
+<elem key="grade">F</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=2 medium=3 low=2 info=2</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">2</elem>
+<elem key="medium">3</elem>
+<elem key="low">2</elem>
+<elem key="info">2</elem>
+</table>
+<table key="findings">
+<table>
+<elem key="id">exposed-env</elem>
+<elem key="severity">HIGH</elem>
+<elem key="title">Environment file exposed</elem>
+<elem key="detail">/.env returned 200</elem>
+<elem key="evidence">body has KEY=value lines (content not recorded)</elem>
+<elem key="path">/.env</elem>
+<elem key="cwe">CWE-538</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="recommendation">Remove .env from the document root and rotate any secrets it contained.</elem>
+</table>
+<table>
+<elem key="id">exposed-git</elem>
+<elem key="severity">HIGH</elem>
+<elem key="title">Git repository metadata exposed</elem>
+<elem key="detail">/.git/HEAD returned 200</elem>
+<elem key="evidence">body is a git HEAD reference</elem>
+<elem key="path">/.git/HEAD</elem>
+<elem key="cwe">CWE-538</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="recommendation">Block /.git/ at the web server and remove it from the document root.</elem>
+</table>
+<table>
+<elem key="id">csp-missing</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Content-Security-Policy missing</elem>
+<elem key="detail">No Content-Security-Policy header or meta tag</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Deploy a CSP that restricts script-src, starting in Report-Only mode.</elem>
+</table>
+<table>
+<elem key="id">framing-missing</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">No clickjacking protection</elem>
+<elem key="detail">No X-Frame-Options or CSP frame-ancestors</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1021</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.7</elem>
+<elem key="recommendation">Add CSP frame-ancestors &apos;none&apos; (or &apos;self&apos;); X-Frame-Options DENY for old browsers.</elem>
+</table>
+<table>
+<elem key="id">no-https-redirect</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Plain HTTP without redirect to HTTPS</elem>
+<elem key="detail">Serves content over plain HTTP without redirecting to HTTPS</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-319</elem>
+<elem key="owasp">A02:2021</elem>
+<elem key="asvs">9.1.1</elem>
+<elem key="recommendation">Redirect all plain HTTP requests to HTTPS with 301 or 308.</elem>
+</table>
+<table>
+<elem key="id">info-disclosure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Software version disclosed</elem>
+<elem key="detail">Server: Apache/2.4.58 (Unix)</elem>
+<elem key="evidence">Server: Apache/2.4.58 (Unix)</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.3.3</elem>
+<elem key="recommendation">Remove version numbers from Server and X-Powered-By style headers.</elem>
+</table>
+<table>
+<elem key="id">trace-enabled</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">HTTP TRACE method enabled</elem>
+<elem key="detail">TRACE / echoed the request</elem>
+<elem key="evidence">TRACE / HTTP/1.1 -&gt; 200</elem>
+<elem key="path">/</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.5.1</elem>
+<elem key="recommendation">Disable TRACE (TraceEnable Off, or deny the method at the proxy).</elem>
+</table>
+<table>
+<elem key="id">permissions-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Permissions-Policy missing</elem>
+<elem key="detail">No Permissions-Policy header</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Disable browser features the site does not use, e.g. camera=(), microphone=(), geolocation=().</elem>
+</table>
+<table>
+<elem key="id">referrer-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Referrer-Policy missing or unrecognised</elem>
+<elem key="detail">No Referrer-Policy; the browser default applies</elem>
+<elem key="path">/</elem>
+<elem key="asvs">14.4.6</elem>
+<elem key="recommendation">Send Referrer-Policy: strict-origin-when-cross-origin (or stricter).</elem>
+</table>
+</table>
+<table key="passed">
+<elem>x-content-type-options</elem>
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">exposed</elem>
+<elem key="status">200</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">exposed</elem>
+<elem key="status">200</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">enabled</elem>
+<elem key="status">200</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script><script id="http-server-header" output="Apache/2.4.58 (Unix)"><elem>Apache/2.4.58 (Unix)</elem>
+</script></port>
+<port protocol="tcp" portid="8443"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="nginx" version="1.18.0" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx:1.18.0</cpe></service><script id="http-hardening-check" output="&#xa;  url: https://localhost:8443/ (200)&#xa;  result: FAIL  score: 4/100  grade: F  policy: baseline&#xa;  summary: critical=0 high=1 medium=5 low=7 info=5 (fail-on=medium)&#xa;  HIGH     cors-reflected-credentials     Origin reflected in Access-Control-Allow-Origin with credentials allowed&#xa;  MEDIUM   cookie-no-secure               Session cookie sent without Secure over HTTPS: session&#xa;  MEDIUM   csp-broad-script-source        script-src allows scripts from https:&#xa;  MEDIUM   csp-unsafe-inline              script-src allows &apos;unsafe-inline&apos; without a nonce or hash&#xa;  MEDIUM   framing-allowed                X-Frame-Options ALLOW-FROM is ignored by current browsers&#xa;  MEDIUM   hsts-disabled                  Strict-Transport-Security max-age=0 turns HSTS off&#xa;  LOW      cookie-no-httponly             Session cookie readable by JavaScript: session&#xa;  LOW      cookie-samesite-none-insecure  SameSite=None without Secure (browsers reject the cookie): tracker&#xa;  LOW      csp-unsafe-eval                script-src allows &apos;unsafe-eval&apos;&#xa;  LOW      info-disclosure                Server: nginx/1.18.0&#xa;  LOW      info-disclosure                X-Powered-By: PHP/8.1.2&#xa;  LOW      referrer-policy-leaky          Referrer-Policy unsafe-url sends full URLs cross-origin&#xa;  LOW      xcto-missing                   X-Content-Type-Options is not nosniff&#xa;  INFO     cookie-flags-nonsession        Not recognised as session cookies, so judged leniently: tracker (no Secure, HttpOnly)&#xa;  INFO     cookie-no-samesite             Session cookie without SameSite: session&#xa;  INFO     csp-no-base-uri                CSP has no base-uri (it does not fall back to default-src)&#xa;  INFO     permissions-policy-missing     No Permissions-Policy header&#xa;  INFO     xxp-enabled                    X-XSS-Protection enables the removed XSS auditor&#xa;  paths:&#xa;    /.git/HEAD      200  absent (content not recognised)&#xa;    /.env           200  absent (content not recognised)&#xa;    /server-status  200  absent (content not recognised)&#xa;    /actuator/env   200  absent (content not recognised)&#xa;    /phpinfo.php    200  absent (content not recognised)&#xa;    /.DS_Store      200  absent (content not recognised)&#xa;    /backup.zip     200  absent (content not recognised)&#xa;    /admin          403  protected&#xa;    /wp-admin/      200  absent (soft-404)&#xa;    TRACE /         405  not enabled&#xa;"><elem key="url">https://localhost:8443/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">FAIL</elem>
+<elem key="score">4</elem>
+<elem key="grade">F</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=1 medium=5 low=7 info=5</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">1</elem>
+<elem key="medium">5</elem>
+<elem key="low">7</elem>
+<elem key="info">5</elem>
+</table>
+<table key="findings">
+<table>
+<elem key="id">cors-reflected-credentials</elem>
+<elem key="severity">HIGH</elem>
+<elem key="title">CORS reflects arbitrary origins with credentials</elem>
+<elem key="detail">Origin reflected in Access-Control-Allow-Origin with credentials allowed</elem>
+<elem key="evidence">Access-Control-Allow-Origin: https://hardening-check.invalid; Access-Control-Allow-Credentials: true</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-942</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.5.3</elem>
+<elem key="recommendation">Match the Origin against an allowlist before echoing it; never reflect it with credentials.</elem>
+</table>
+<table>
+<elem key="id">cookie-no-secure</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Session cookie without Secure over HTTPS</elem>
+<elem key="detail">Session cookie sent without Secure over HTTPS: session</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-614</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">3.4.1</elem>
+<elem key="recommendation">Add the Secure attribute to session cookies.</elem>
+</table>
+<table>
+<elem key="id">csp-broad-script-source</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">CSP allows scripts from any host or data: URLs</elem>
+<elem key="detail">script-src allows scripts from https:</elem>
+<elem key="evidence">Content-Security-Policy: default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; https:</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">List specific script hosts, or use nonces with &apos;strict-dynamic&apos;.</elem>
+</table>
+<table>
+<elem key="id">csp-unsafe-inline</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">CSP allows inline scripts</elem>
+<elem key="detail">script-src allows &apos;unsafe-inline&apos; without a nonce or hash</elem>
+<elem key="evidence">Content-Security-Policy: default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; https:</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Replace &apos;unsafe-inline&apos; with nonces or hashes.</elem>
+</table>
+<table>
+<elem key="id">framing-allowed</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Framing protection is ineffective</elem>
+<elem key="detail">X-Frame-Options ALLOW-FROM is ignored by current browsers</elem>
+<elem key="evidence">X-Frame-Options: ALLOW-FROM https://partner.example</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1021</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.7</elem>
+<elem key="recommendation">Use CSP frame-ancestors with explicit origins instead of * or ALLOW-FROM.</elem>
+</table>
+<table>
+<elem key="id">hsts-disabled</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">HSTS disabled with max-age=0</elem>
+<elem key="detail">Strict-Transport-Security max-age=0 turns HSTS off</elem>
+<elem key="evidence">Strict-Transport-Security: max-age=0</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-319</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.5</elem>
+<elem key="recommendation">Set max-age to at least one year once HTTPS works for the whole site.</elem>
+</table>
+<table>
+<elem key="id">cookie-no-httponly</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Session cookie readable by JavaScript</elem>
+<elem key="detail">Session cookie readable by JavaScript: session</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1004</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">3.4.2</elem>
+<elem key="recommendation">Add HttpOnly to session cookies that scripts do not need to read.</elem>
+</table>
+<table>
+<elem key="id">cookie-samesite-none-insecure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">SameSite=None cookie without Secure</elem>
+<elem key="detail">SameSite=None without Secure (browsers reject the cookie): tracker</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1275</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">3.4.3</elem>
+<elem key="recommendation">Browsers reject SameSite=None without Secure; add Secure or use Lax.</elem>
+</table>
+<table>
+<elem key="id">csp-unsafe-eval</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">CSP allows eval()</elem>
+<elem key="detail">script-src allows &apos;unsafe-eval&apos;</elem>
+<elem key="evidence">Content-Security-Policy: default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; https:</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Remove &apos;unsafe-eval&apos;; refactor code that builds scripts from strings.</elem>
+</table>
+<table>
+<elem key="id">info-disclosure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Software version disclosed</elem>
+<elem key="detail">Server: nginx/1.18.0</elem>
+<elem key="evidence">Server: nginx/1.18.0</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.3.3</elem>
+<elem key="recommendation">Remove version numbers from Server and X-Powered-By style headers.</elem>
+</table>
+<table>
+<elem key="id">info-disclosure</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Software version disclosed</elem>
+<elem key="detail">X-Powered-By: PHP/8.1.2</elem>
+<elem key="evidence">X-Powered-By: PHP/8.1.2</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.3.3</elem>
+<elem key="recommendation">Remove version numbers from Server and X-Powered-By style headers.</elem>
+</table>
+<table>
+<elem key="id">referrer-policy-leaky</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Referrer-Policy leaks full URLs cross-origin</elem>
+<elem key="detail">Referrer-Policy unsafe-url sends full URLs cross-origin</elem>
+<elem key="evidence">Referrer-Policy: unsafe-url</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.6</elem>
+<elem key="recommendation">Use strict-origin-when-cross-origin, same-origin or no-referrer.</elem>
+</table>
+<table>
+<elem key="id">xcto-missing</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">X-Content-Type-Options is not nosniff</elem>
+<elem key="detail">X-Content-Type-Options is not nosniff</elem>
+<elem key="evidence">X-Content-Type-Options: sniff</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.4</elem>
+<elem key="recommendation">Send X-Content-Type-Options: nosniff on all responses.</elem>
+</table>
+<table>
+<elem key="id">cookie-flags-nonsession</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Non-session cookies without Secure or HttpOnly</elem>
+<elem key="detail">Not recognised as session cookies, so judged leniently: tracker (no Secure, HttpOnly)</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Review whether these cookies need to be readable by scripts or sent over plain HTTP.</elem>
+</table>
+<table>
+<elem key="id">cookie-no-samesite</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Session cookie without SameSite</elem>
+<elem key="detail">Session cookie without SameSite: session</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1275</elem>
+<elem key="asvs">3.4.3</elem>
+<elem key="recommendation">Set SameSite=Lax (or Strict) explicitly; browser defaults differ.</elem>
+</table>
+<table>
+<elem key="id">csp-no-base-uri</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">CSP does not restrict base-uri</elem>
+<elem key="detail">CSP has no base-uri (it does not fall back to default-src)</elem>
+<elem key="evidence">Content-Security-Policy: default-src &apos;self&apos;; script-src &apos;self&apos; &apos;unsafe-inline&apos; &apos;unsafe-eval&apos; https:</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Add base-uri &apos;none&apos; or &apos;self&apos;; base-uri does not fall back to default-src.</elem>
+</table>
+<table>
+<elem key="id">permissions-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Permissions-Policy missing</elem>
+<elem key="detail">No Permissions-Policy header</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Disable browser features the site does not use, e.g. camera=(), microphone=(), geolocation=().</elem>
+</table>
+<table>
+<elem key="id">xxp-enabled</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Legacy X-XSS-Protection filter enabled</elem>
+<elem key="detail">X-XSS-Protection enables the removed XSS auditor</elem>
+<elem key="evidence">X-XSS-Protection: 1; mode=block</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Set X-XSS-Protection: 0 or drop it; rely on CSP.</elem>
+</table>
+</table>
+<table key="passed">
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">absent (content not recognised)</elem>
+<elem key="status">200</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">protected</elem>
+<elem key="status">403</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">absent (soft-404)</elem>
+<elem key="status">200</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">not enabled</elem>
+<elem key="status">405</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script><script id="http-server-header" output="nginx/1.18.0"><elem>nginx/1.18.0</elem>
+</script></port>
+<port protocol="tcp" portid="8445"><state state="open" reason="syn-ack" reason_ttl="0"/><service name="http" product="nginx" tunnel="ssl" method="probed" conf="10"><cpe>cpe:/a:igor_sysoev:nginx</cpe></service><script id="http-hardening-check" output="&#xa;  url: https://localhost:8445/ (200)&#xa;  result: FAIL  score: 71/100  grade: C  policy: baseline&#xa;  summary: critical=0 high=0 medium=2 low=3 info=3 (fail-on=medium)&#xa;  MEDIUM   csp-no-script-restriction   CSP has neither script-src nor default-src&#xa;  MEDIUM   framing-allowed             CSP frame-ancestors allows any site to frame the page&#xa;  LOW      cors-reflected-origin       Arbitrary Origin reflected in Access-Control-Allow-Origin&#xa;  LOW      hsts-short-max-age          max-age=86400 is below 15768000&#xa;  LOW      referrer-policy-leaky       Referrer-Policy no-referrer-when-downgrade sends full URLs cross-origin&#xa;  INFO     csp-no-base-uri             CSP has no base-uri (it does not fall back to default-src)&#xa;  INFO     hsts-no-subdomains          HSTS does not set includeSubDomains&#xa;  INFO     permissions-policy-missing  No Permissions-Policy header&#xa;  passed: x-content-type-options&#xa;  paths:&#xa;    /.git/HEAD      404  absent&#xa;    /.env           404  absent&#xa;    /server-status  404  absent&#xa;    /actuator/env   404  absent&#xa;    /phpinfo.php    404  absent&#xa;    /.DS_Store      404  absent&#xa;    /backup.zip     404  absent&#xa;    /admin          403  protected&#xa;    /wp-admin/      404  absent&#xa;    TRACE /         405  not enabled&#xa;"><elem key="url">https://localhost:8445/</elem>
+<elem key="policy">baseline</elem>
+<elem key="status">200</elem>
+<elem key="result">FAIL</elem>
+<elem key="score">71</elem>
+<elem key="grade">C</elem>
+<elem key="fail_on">medium</elem>
+<elem key="summary">critical=0 high=0 medium=2 low=3 info=3</elem>
+<table key="counts">
+<elem key="critical">0</elem>
+<elem key="high">0</elem>
+<elem key="medium">2</elem>
+<elem key="low">3</elem>
+<elem key="info">3</elem>
+</table>
+<table key="findings">
+<table>
+<elem key="id">csp-no-script-restriction</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">CSP does not restrict scripts</elem>
+<elem key="detail">CSP has neither script-src nor default-src</elem>
+<elem key="evidence">Content-Security-Policy: object-src &apos;none&apos;; frame-ancestors *</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Add script-src or default-src to the policy.</elem>
+</table>
+<table>
+<elem key="id">framing-allowed</elem>
+<elem key="severity">MEDIUM</elem>
+<elem key="title">Framing protection is ineffective</elem>
+<elem key="detail">CSP frame-ancestors allows any site to frame the page</elem>
+<elem key="evidence">X-Frame-Options: SAMEORIGIN</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-1021</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.7</elem>
+<elem key="recommendation">Use CSP frame-ancestors with explicit origins instead of * or ALLOW-FROM.</elem>
+</table>
+<table>
+<elem key="id">cors-reflected-origin</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">CORS reflects arbitrary origins</elem>
+<elem key="detail">Arbitrary Origin reflected in Access-Control-Allow-Origin</elem>
+<elem key="evidence">Access-Control-Allow-Origin: https://hardening-check.invalid</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-942</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.5.3</elem>
+<elem key="recommendation">Match the Origin against an allowlist, or use * deliberately for public resources.</elem>
+</table>
+<table>
+<elem key="id">hsts-short-max-age</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">HSTS max-age below policy minimum</elem>
+<elem key="detail">max-age=86400 is below 15768000</elem>
+<elem key="evidence">Strict-Transport-Security: max-age=86400</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-319</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.5</elem>
+<elem key="recommendation">Raise max-age to the policy minimum (one year is common).</elem>
+</table>
+<table>
+<elem key="id">referrer-policy-leaky</elem>
+<elem key="severity">LOW</elem>
+<elem key="title">Referrer-Policy leaks full URLs cross-origin</elem>
+<elem key="detail">Referrer-Policy no-referrer-when-downgrade sends full URLs cross-origin</elem>
+<elem key="evidence">Referrer-Policy: no-referrer, no-referrer-when-downgrade</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-200</elem>
+<elem key="owasp">A05:2021</elem>
+<elem key="asvs">14.4.6</elem>
+<elem key="recommendation">Use strict-origin-when-cross-origin, same-origin or no-referrer.</elem>
+</table>
+<table>
+<elem key="id">csp-no-base-uri</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">CSP does not restrict base-uri</elem>
+<elem key="detail">CSP has no base-uri (it does not fall back to default-src)</elem>
+<elem key="evidence">Content-Security-Policy: object-src &apos;none&apos;; frame-ancestors *</elem>
+<elem key="path">/</elem>
+<elem key="cwe">CWE-693</elem>
+<elem key="asvs">14.4.3</elem>
+<elem key="recommendation">Add base-uri &apos;none&apos; or &apos;self&apos;; base-uri does not fall back to default-src.</elem>
+</table>
+<table>
+<elem key="id">hsts-no-subdomains</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">HSTS does not cover subdomains</elem>
+<elem key="detail">HSTS does not set includeSubDomains</elem>
+<elem key="evidence">Strict-Transport-Security: max-age=86400</elem>
+<elem key="path">/</elem>
+<elem key="asvs">14.4.5</elem>
+<elem key="recommendation">Add includeSubDomains once every subdomain serves HTTPS.</elem>
+</table>
+<table>
+<elem key="id">permissions-policy-missing</elem>
+<elem key="severity">INFO</elem>
+<elem key="title">Permissions-Policy missing</elem>
+<elem key="detail">No Permissions-Policy header</elem>
+<elem key="path">/</elem>
+<elem key="recommendation">Disable browser features the site does not use, e.g. camera=(), microphone=(), geolocation=().</elem>
+</table>
+</table>
+<table key="passed">
+<elem>x-content-type-options</elem>
+</table>
+<table key="paths">
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.git/HEAD</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/server-status</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/actuator/env</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/phpinfo.php</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/.DS_Store</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/backup.zip</elem>
+</table>
+<table>
+<elem key="verdict">protected</elem>
+<elem key="status">403</elem>
+<elem key="path">/admin</elem>
+</table>
+<table>
+<elem key="verdict">absent</elem>
+<elem key="status">404</elem>
+<elem key="path">/wp-admin/</elem>
+</table>
+<table>
+<elem key="verdict">not enabled</elem>
+<elem key="status">405</elem>
+<elem key="path">TRACE /</elem>
+</table>
+</table>
+<elem key="requests">11</elem>
+</script></port>
+</ports>
+<times srtt="239" rttvar="905" to="100000"/>
+</host>
+<runstats><finished time="1791250345" timestr="Mon Oct  5 21:32:25 2026" summary="Nmap done at Mon Oct  5 21:32:25 2026; 1 IP address (1 host up) scanned in 16.23 seconds" elapsed="16.23" exit="success"/><hosts up="1" down="0" total="1"/>
+</runstats>
+</nmaprun>

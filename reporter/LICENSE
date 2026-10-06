@@ -1,0 +1,20 @@
+http-hardening-nmap-nse
+Copyright (c) 2025-2026 Vijaysingh Puwar
+
+This project (the Nmap script http-hardening-check.nse, the hhc-report
+package, the test lab, tests and documentation) is distributed under the
+same terms as Nmap itself, as the script has declared since its first
+release, so that it can be used and contributed alongside Nmap's own
+scripts.
+
+The Nmap license (Nmap Public Source License) is published at:
+
+    https://nmap.org/book/man-legal.html
+    https://nmap.org/npsl/
+
+No code in this repository is copied from Nmap. The script uses Nmap's NSE
+libraries (http, shortport, stdnse, url, json) at runtime, which are part of
+an Nmap installation and are not distributed here.
+
+THIS SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND. Use it only
+against systems you own or are explicitly authorized to test.
