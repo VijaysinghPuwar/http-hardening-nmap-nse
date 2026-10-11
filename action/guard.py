@@ -16,13 +16,14 @@ import os
 import re
 import socket
 import sys
+from typing import NoReturn
 
 HOST = re.compile(r"^[A-Za-z0-9](?:[A-Za-z0-9.-]{0,251}[A-Za-z0-9])?$")
 PORTS = re.compile(r"^[0-9]{1,5}(?:-[0-9]{1,5})?(?:,[0-9]{1,5}(?:-[0-9]{1,5})?)*$")
 SEVERITY = {"critical", "high", "medium", "low", "info", "policy", "none"}
 
 
-def fail(msg: str) -> None:
+def fail(msg: str) -> NoReturn:
     print(f"::error::{msg}", file=sys.stderr)
     sys.exit(2)
 

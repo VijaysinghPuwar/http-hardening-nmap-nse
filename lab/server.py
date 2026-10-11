@@ -11,18 +11,21 @@ Ports (all on 127.0.0.1):
   8180  exposed    plain HTTP, real /.git/HEAD and /.env, a directory listing, TRACE enabled
   8000  garbage    answers every request with bytes that are not HTTP
   8088  silent     accepts connections and never answers (timeout)
+  8086  bare6      the "bare" profile on [::1], for IPv6 URL formatting
 
 Extra routes on every HTTP profile: /status/<code> answers with that code,
-/loop/a and /loop/b redirect to each other. On 8445: /dup-csp (two CSP
-headers), /big-header (8 KB header), /cookies (30 Set-Cookie headers).
+/loop/a and /loop/b redirect to each other. On 8445, the header and redirect
+edge cases listed in EXTRA_ROUTES: /dup-csp, /big-header, /cookies,
+/dup-xcto, /cors-padded, /hsts-huge, /meta-csp, /empty-location and more.
 
-These are intentionally insecure test targets. They bind to 127.0.0.1 only.
+These are intentionally insecure test targets. They bind to loopback only.
 """
 
 import argparse
 import collections
 import contextlib
 import http.server
+import socket
 import socketserver
 import ssl
 import subprocess
@@ -102,6 +105,39 @@ EXTRA_ROUTES = {
         },
         b"cookies",
     ),
+    # Headers duplicated by a proxy. Nmap joins them into one comma-separated
+    # value, which the checks must read the way a browser does.
+    "/dup-xcto": (200, {"X-Content-Type-Options": ["nosniff", "nosniff"]}, b"xcto"),
+    # Fetch looks at the first value only, so this one really is not nosniff.
+    "/xcto-sniff-first": (200, {"X-Content-Type-Options": "sniff, nosniff"}, b"xcto"),
+    # A reflecting CORS handler that pads its header values.
+    "/cors-padded": (
+        200,
+        {
+            "Access-Control-Allow-Origin": f" {PROBE_ORIGIN} ",
+            "Access-Control-Allow-Credentials": " True ",
+        },
+        b"cors",
+    ),
+    "/cors-wildcard-padded": (
+        200,
+        {"Access-Control-Allow-Origin": " * ", "Access-Control-Allow-Credentials": "true"},
+        b"cors",
+    ),
+    # More digits than a 64-bit integer holds.
+    "/hsts-huge": (200, {"Strict-Transport-Security": "max-age=" + "9" * 23}, b"hsts"),
+    "/hsts-repeated-directive": (200, {"Strict-Transport-Security": "max-age=1; max-age=2"}, b"hsts"),
+    # CSP delivered only in a meta tag: counted, but frame-ancestors is not.
+    "/meta-csp": (
+        200,
+        {"Content-Security-Policy": None},
+        b"<html><head><meta http-equiv='Content-Security-Policy' content=\"script-src 'self'; "
+        b"object-src 'none'; base-uri 'none'; frame-ancestors 'none'\"></head><body>x</body></html>",
+    ),
+    # Redirects that do not name a usable target.
+    "/empty-location": (302, {"Location": ""}, b""),
+    "/blank-location": (302, {"Location": "   "}, b""),
+    "/long-location": (302, {"Location": "/" + "a" * 600}, b""),
 }
 
 
@@ -190,6 +226,8 @@ def make_handler(profile_for, server_header, soft404=False, cors_reflect=False, 
         def _send(self, code, headers, body):
             self.send_response(code)
             for name, value in headers.items():
+                if value is None:
+                    continue  # a route sets None to drop a header its profile sends
                 for v in value if isinstance(value, list) else [value]:
                     self.send_header(name, v)
             if "Content-Type" not in headers:
@@ -307,6 +345,21 @@ def serve(port, handler, ctx=None):
     return srv
 
 
+class LabServer6(LabServer):
+    address_family = socket.AF_INET6
+
+
+def serve6(port, handler):
+    """IPv6 loopback listener, so the URLs the script builds can be checked
+    for RFC 3986 brackets. Returns None where ::1 is not available."""
+    try:
+        srv = LabServer6(("::1", port), handler)
+    except OSError:
+        return None
+    threading.Thread(target=srv.serve_forever, daemon=True).start()
+    return srv
+
+
 def start():
     ensure_cert()
 
@@ -330,8 +383,9 @@ def start():
         serve(8180, make_handler(lambda h: "exposed", "Apache/2.4.58 (Unix)")),
         serve_raw(8000, "garbage"),
         serve_raw(8088, "silent"),
+        serve6(8086, make_handler(lambda h: "bare", "nginx")),
     ]
-    return servers
+    return [s for s in servers if s is not None]
 
 
 if __name__ == "__main__":
@@ -341,7 +395,8 @@ if __name__ == "__main__":
     start()
     print(
         "lab up on 127.0.0.1: 8080 redirect, 8081 bare, 8082 legacy, 8443 weak, "
-        "8444 hardened (SNI app.lab.test), 8445 partial, 8180 exposed, 8000 garbage, 8088 silent"
+        "8444 hardened (SNI app.lab.test), 8445 partial, 8180 exposed, 8000 garbage, 8088 silent; "
+        "[::1]: 8086 bare"
     )
     with contextlib.suppress(KeyboardInterrupt):
         threading.Event().wait()

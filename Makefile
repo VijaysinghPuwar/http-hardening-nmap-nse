@@ -12,7 +12,7 @@ COMPOSE := docker compose -f lab/docker/docker-compose.yml
 export HHC_UID := $(shell id -u)
 export HHC_GID := $(shell id -g)
 
-.PHONY: install lint lint-lua lint-python unit reporter-test integration stress test check \
+.PHONY: install lint lint-lua lint-python lint-extra unit reporter-test integration stress test check \
         lab-up scan report lab-down demo clean
 
 install: $(BIN)/hhc-report
@@ -22,7 +22,7 @@ $(BIN)/hhc-report: reporter/pyproject.toml
 	$(BIN)/pip install --quiet --upgrade pip
 	$(BIN)/pip install --quiet -e "reporter[dev]"
 
-lint: lint-lua lint-python
+lint: lint-lua lint-python lint-extra
 
 lint-lua:
 	$(LUACHECK) http-hardening-check.nse tests/unit
@@ -31,6 +31,24 @@ lint-python: install
 	$(BIN)/ruff check .
 	$(BIN)/ruff format --check .
 	$(BIN)/mypy reporter/src
+	$(PYTHON) scripts/check_text.py
+
+# Shell, Dockerfile, workflow and Python security linters. CI always runs
+# these. Locally a tool that is not installed is reported as skipped, but a
+# tool that is installed and fails fails the target.
+YAMLS := .github/workflows/ci.yml action.yml lab/docker/docker-compose.yml
+
+lint-extra:
+	@if command -v shellcheck >/dev/null; then echo "shellcheck"; \
+	  shellcheck -S style lab/docker/scanner/scan.sh action/run.sh; else echo "skip shellcheck (not installed)"; fi
+	@if command -v hadolint >/dev/null; then echo "hadolint"; \
+	  hadolint lab/docker/*/Dockerfile; else echo "skip hadolint (not installed)"; fi
+	@if command -v actionlint >/dev/null; then echo "actionlint"; \
+	  actionlint; else echo "skip actionlint (not installed)"; fi
+	@if command -v yamllint >/dev/null; then echo "yamllint"; \
+	  yamllint -c .yamllint.yml $(YAMLS); else echo "skip yamllint (not installed)"; fi
+	@if command -v bandit >/dev/null; then echo "bandit"; \
+	  bandit -q -c bandit.yml -r reporter/src action scripts lab; else echo "skip bandit (not installed)"; fi
 
 unit:
 	$(LUA) tests/unit/test_engine.lua

@@ -141,9 +141,10 @@ def main(argv: list[str] | None = None) -> int:
         return 2
 
     if not args.quiet:
-        g = report["gate"]
-        assert g is not None
+        # evaluate_gate always records the decision; "or {}" keeps the type
+        # checker happy without an assert that python -O would strip.
+        g = report["gate"] or {}
         verdict = "FAIL" if failed else "PASS"
-        detail = "; ".join(g["reasons"]) or "nothing at or above the threshold"
+        detail = "; ".join(g.get("reasons") or []) or "nothing at or above the threshold"
         print(f"hhc-report: {verdict} (fail-on {args.fail_on}): {detail}", file=sys.stderr)
     return 1 if failed else 0
