@@ -56,13 +56,16 @@ TRACE. No payloads, credentials or state-changing methods are sent.
 --
 -- @args http-hardening-check.policy    Policy file (JSON). Default: built-in baseline,
 --                                      identical to policies/baseline.json.
--- @args http-hardening-check.path      Page to evaluate. Default: "/".
--- @args http-hardening-check.vhost     Hostname for the Host header and TLS SNI.
+-- @args http-hardening-check.path      Page to evaluate. Must be an absolute path with
+--                                      no whitespace. Default: "/".
+-- @args http-hardening-check.vhost     Hostname for the Host header and TLS SNI. Must be
+--                                      1-255 characters with no whitespace.
 --                                      Default: the name given on the command line.
 -- @args http-hardening-check.exposure  true to probe the built-in sensitive paths and TRACE.
 --                                      Default: false (or the policy's exposure.enabled).
 -- @args http-hardening-check.paths     Extra paths to probe, as a list: {/admin,/debug}
---                                      or "/admin,/debug". Probed even without exposure=true.
+--                                      or "/admin,/debug". Probed even without exposure=true,
+--                                      and probed before the built-in catalog.
 -- @args http-hardening-check.max-paths Upper bound on probed paths. Default: 25.
 -- @args http-hardening-check.skip      Finding IDs to suppress (accepted risk), as a list.
 -- @args http-hardening-check.fail-on   Lowest severity that makes the result FAIL:
@@ -326,6 +329,25 @@ function Engine.to_list(v)
   return out
 end
 
+-- Largest value that is exact as both a Lua integer and a double, so a
+-- parsed number can always be formatted with %d and compared without loss.
+local MAX_SAFE_INT = 2 ^ 53
+
+-- Parses a value that must be a whole number >= 0. Returns nil and a reason
+-- for 1.5, 1e400 or "abc", because those reach string.format("%d", ...)
+-- later and would abort the script with "number has no integer
+-- representation".
+function Engine.to_integer(v)
+  local n = tonumber(v)
+  if not n then return nil, "not a number" end
+  if n ~= n then return nil, "not a number" end
+  if n == math.huge or n == -math.huge then return nil, "not finite" end
+  if n < 0 then return nil, "negative" end
+  if n ~= math.floor(n) then return nil, "not a whole number" end
+  if n > MAX_SAFE_INT then return nil, "larger than 2^53" end
+  return math.tointeger(n) or math.floor(n)
+end
+
 function Engine.to_bool(v, default)
   if v == nil then return default end
   if type(v) == "boolean" then return v end
@@ -345,6 +367,25 @@ function Engine.clean_path(p)
   if p:sub(1, 1) ~= "/" then p = "/" .. p end
   if #p > 512 then return nil, "longer than 512 characters" end
   return p
+end
+
+-- Normalises a Host header / TLS SNI name. An empty or over-long name makes
+-- OpenSSL reject SSL_set_tlsext_host_name, which aborts the whole Nmap run
+-- (not just this script), so it has to be refused before the first request.
+function Engine.clean_host(v)
+  local s = trim(v)
+  if s == "" then return nil, "empty" end
+  if s:find("[%c%s]") then return nil, "contains whitespace or control characters" end
+  if #s > 255 then return nil, "longer than 255 characters" end
+  return s
+end
+
+-- RFC 3986: an IPv6 literal must be bracketed inside a URL, otherwise
+-- "http://::1:8080/" is not parseable by anything downstream.
+function Engine.authority(host, port)
+  host = tostring(host)
+  if host:find(":", 1, true) and host:sub(1, 1) ~= "[" then host = "[" .. host .. "]" end
+  return ("%s:%d"):format(host, port)
 end
 
 -- Returns the cleaned, de-duplicated path list (bounded by max) and warnings.
@@ -382,7 +423,14 @@ end
 
 -- Merges a decoded policy document over the defaults. Unknown keys and check
 -- IDs are errors: a typo in a policy must not silently weaken it.
-function Engine.apply_policy(doc)
+--
+-- jtype is the decoder's own verdict for the document ("object", "array",
+-- "null", ...). Shape alone cannot tell an empty object from an empty array,
+-- so without it "[]" and "null" would pass as an empty policy.
+function Engine.apply_policy(doc, jtype)
+  if jtype ~= nil and jtype ~= "object" then
+    return nil, ("policy must be a JSON object, not %s"):format(tostring(jtype))
+  end
   if type(doc) ~= "table" or is_array(doc) and #doc > 0 then
     return nil, "policy must be a JSON object"
   end
@@ -605,7 +653,10 @@ function Engine.parse_hsts(value)
       if name == "max-age" then
         local n = val:match('^"(%d+)"$') or val:match("^(%d+)$")
         if not n then return nil, ("max-age value %q is not a number"):format(val) end
-        out.max_age = tonumber(n)
+        -- A server may send more digits than a Lua integer holds. Such a
+        -- value is "effectively forever" either way, so cap it rather than
+        -- keep a float that %d cannot format.
+        out.max_age = math.tointeger(tonumber(n)) or math.maxinteger
       elseif name == "includesubdomains" then
         out.subdomains = true
       elseif name == "preload" then
@@ -822,8 +873,11 @@ function Engine.check_headers(resp, tls, r, path)
     add("framing-allowed", detail, h["x-frame-options"] and ("X-Frame-Options: " .. h["x-frame-options"]) or nil)
   end
 
+  -- Fetch's "determine nosniff" splits the header on commas and looks only at
+  -- the first value, so a header sent twice (which Nmap joins into
+  -- "nosniff, nosniff") still means nosniff.
   local xcto = h["x-content-type-options"]
-  if xcto and xcto:lower():match("^%s*nosniff%s*$") then
+  if xcto and trim(xcto:match("^[^,]*")):lower() == "nosniff" then
     r.pass("x-content-type-options")
   else
     add("xcto-missing", "X-Content-Type-Options is not nosniff",
@@ -870,6 +924,9 @@ function Engine.check_headers(resp, tls, r, path)
   local acac = (h["access-control-allow-credentials"] or ""):lower():match("^%s*true%s*$") ~= nil
   if acao then
     local ev = "Access-Control-Allow-Origin: " .. acao .. (acac and "; Access-Control-Allow-Credentials: true" or "")
+    -- Compare the trimmed value: a reflecting server that pads the header
+    -- still reflects, and missing that would drop a HIGH finding.
+    acao = trim(acao)
     if acao:lower() == PROBE_ORIGIN then
       if acac then
         add("cors-reflected-credentials", "Origin reflected in Access-Control-Allow-Origin with credentials allowed",
@@ -877,7 +934,7 @@ function Engine.check_headers(resp, tls, r, path)
       else
         add("cors-reflected-origin", "Arbitrary Origin reflected in Access-Control-Allow-Origin", ev)
       end
-    elseif trim(acao) == "*" and acac then
+    elseif acao == "*" and acac then
       add("cors-wildcard-credentials",
         "Access-Control-Allow-Origin * with credentials; browsers refuse it, so the intent is unclear", ev)
     end
@@ -1049,7 +1106,7 @@ local function load_policy(path)
   f:close()
   local ok, doc = json.parse(text or "")
   if not ok then return nil, ("policy %s is not valid JSON: %s"):format(path, tostring(doc)) end
-  local p, why = Engine.apply_policy(doc)
+  local p, why = Engine.apply_policy(doc, json.typeof(doc))
   if not p then return nil, ("policy %s: %s"):format(path, why) end
   return p
 end
@@ -1071,9 +1128,10 @@ local function resolve_policy()
   end
   local hsts_min = arg("hsts-min")
   if hsts_min then
-    local n = tonumber(hsts_min)
-    if not n or n < 0 then
-      return nil, ("hsts-min must be a non-negative number (got %q)"):format(tostring(hsts_min))
+    local n, why = Engine.to_integer(hsts_min)
+    if not n then
+      return nil, ("hsts-min must be a whole number of seconds >= 0 (got %q: %s)")
+        :format(tostring(hsts_min), why)
     end
     policy.hsts.min_max_age = n
   end
@@ -1082,10 +1140,33 @@ local function resolve_policy()
     policy.skip[#policy.skip + 1] = id
   end
   policy.exposure.enabled = Engine.to_bool(arg("exposure"), policy.exposure.enabled)
-  local max_paths = tonumber(arg("max-paths", policy.exposure.max_paths))
-  if not max_paths or max_paths < 0 then return nil, "max-paths must be a non-negative number" end
-  policy.exposure.max_paths = math.floor(max_paths)
+  local max_paths, why = Engine.to_integer(arg("max-paths", policy.exposure.max_paths))
+  if not max_paths then
+    return nil, ("max-paths must be a whole number >= 0 (%s)"):format(why)
+  end
+  policy.exposure.max_paths = max_paths
   return policy
+end
+
+local DEFAULT_TIMEOUT = 8000
+
+local function timeout_ms()
+  local n = Engine.to_integer(arg("timeout", DEFAULT_TIMEOUT))
+  if not n or n < 1 then return DEFAULT_TIMEOUT end
+  return n
+end
+
+-- Validates the arguments that become part of a request. Returns the page
+-- path and the vhost (nil when not given).
+local function resolve_request()
+  local path, why = Engine.clean_path(arg("path", "/"))
+  if not path then return nil, nil, ("path %q is not usable: %s"):format(tostring(arg("path")), why) end
+  local vhost = arg("vhost")
+  if vhost ~= nil then
+    vhost, why = Engine.clean_host(vhost)
+    if not vhost then return nil, nil, ("vhost %q is not usable: %s"):format(tostring(arg("vhost")), why) end
+  end
+  return path, vhost
 end
 
 -- http.get writes options.scheme into the table it is given when it sees a
@@ -1116,13 +1197,19 @@ end
 -- page. Stops at a redirect to HTTPS (a pass for plaintext ports) or off-site.
 local function fetch_page(target, port, path, opts, counter)
   local hostname = stdnse.get_hostname(target)
-  local resp, upgrade, offsite, hops, loop = nil, nil, nil, 0, false
+  local resp, upgrade, offsite, badloc, hops, loop = nil, nil, nil, nil, 0, false
   local seen = {}
   for attempt = 1, 4 do
     counter.n = counter.n + 1
     resp = http.get(target, port, path, fresh(opts))
     if not (resp and resp.status) then return nil, resp and resp["status-line"] end
     local loc = resp.status >= 300 and resp.status < 400 and resp.header.location
+    -- "Location:" with an empty value is not a usable redirect. Without this
+    -- it resolves back to the current page and looks like a redirect loop.
+    if loc then
+      loc = trim(loc)
+      if loc == "" then loc = nil end
+    end
     if not loc then break end
 
     local scheme = resp.ssl and "https" or "http"
@@ -1137,7 +1224,13 @@ local function fetch_page(target, port, path, opts, counter)
       offsite = loc
       break
     end
-    local next_path = u.path .. (u.query and ("?" .. u.query) or "")
+    -- The target comes from the server, so it goes through the same check as
+    -- an operator-supplied path: nothing unprintable reaches a request line.
+    local next_path, why = Engine.clean_path(u.path .. (u.query and ("?" .. u.query) or ""))
+    if not next_path then
+      badloc = {location = loc, why = why}
+      break
+    end
     seen[path] = true
     if seen[next_path] or attempt == 4 then
       loop = true
@@ -1146,7 +1239,8 @@ local function fetch_page(target, port, path, opts, counter)
     path = next_path
     hops = hops + 1
   end
-  return {resp = resp, path = path, upgrade = upgrade, offsite = offsite, hops = hops, loop = loop}
+  return {resp = resp, path = path, upgrade = upgrade, offsite = offsite, badloc = badloc,
+    hops = hops, loop = loop}
 end
 
 local function probe(target, port, policy, extra_paths, opts, r, counter)
@@ -1155,12 +1249,14 @@ local function probe(target, port, policy, extra_paths, opts, r, counter)
   if policy.exposure.enabled then
     for _, e in ipairs(EXPOSURE) do by_path[e.path] = e end
   end
+  -- Paths the operator asked for come first: with a small max-paths the
+  -- built-in catalog must not squeeze out an explicit list.
   local raw = {}
+  for _, p in ipairs(policy.exposure.paths) do raw[#raw + 1] = p end
+  for _, p in ipairs(extra_paths) do raw[#raw + 1] = p end
   if policy.exposure.enabled then
     for _, e in ipairs(EXPOSURE) do raw[#raw + 1] = e.path end
   end
-  for _, p in ipairs(policy.exposure.paths) do raw[#raw + 1] = p end
-  for _, p in ipairs(extra_paths) do raw[#raw + 1] = p end
   local paths, warnings = Engine.clean_paths(raw, policy.exposure.max_paths)
   if #paths == 0 then return nil, warnings end
 
@@ -1243,18 +1339,31 @@ local function error_output(out, kind, detail)
 end
 
 action = function(host, port)
-  local target = copy_target(host, arg("vhost"))
   local tls_guess = shortport.ssl(host, port)
   local out = stdnse.output_table()
-  out.url = ("%s://%s:%d%s"):format(tls_guess and "https" or "http", stdnse.get_hostname(target), port.number,
-    arg("path", "/"))
+
+  -- path and vhost are validated before anything is built from them: an
+  -- empty or over-long vhost makes OpenSSL abort the entire Nmap run.
+  local path, vhost, aerr = resolve_request()
+  if not path then
+    out.url = ("%s://%s"):format(tls_guess and "https" or "http",
+      Engine.authority(stdnse.get_hostname(host), port.number))
+    return error_output(out, "argument-error", aerr)
+  end
+
+  local target = copy_target(host, vhost)
+  out.url = ("%s://%s%s"):format(tls_guess and "https" or "http",
+    Engine.authority(stdnse.get_hostname(target), port.number), path)
 
   local policy, perr = resolve_policy()
   if not policy then return error_output(out, "policy-error", perr) end
   out.policy = policy.name
 
   local opts = {
-    timeout = tonumber(arg("timeout", 8000)) or 8000,
+    -- A timeout that is not a positive number of milliseconds falls back to
+    -- the default instead of failing the scan: a negative value aborts the
+    -- request with a Lua error and 0 makes every request time out at once.
+    timeout = timeout_ms(),
     redirect_ok = false,
     no_cache = true,
     max_body_size = 262144,
@@ -1263,25 +1372,33 @@ action = function(host, port)
   }
   local counter = {n = 0}
 
-  local page, ferr = fetch_page(target, port, arg("path", "/"), opts, counter)
+  local page, ferr = fetch_page(target, port, path, opts, counter)
   if not page then
     out.requests = counter.n
     return error_output(out, Engine.classify_error(ferr), ferr or "no response")
   end
   local resp = page.resp
   local tls = resp.ssl and true or false
-  out.url = ("%s://%s:%d%s"):format(tls and "https" or "http", stdnse.get_hostname(target), port.number, page.path)
+  out.url = ("%s://%s%s"):format(tls and "https" or "http",
+    Engine.authority(stdnse.get_hostname(target), port.number), page.path)
   out.status = resp.status
 
   local r = Engine.new_result(policy)
   local notes = {}
+  -- A Location header is server-controlled text, so it is stripped of control
+  -- characters and shortened before it goes anywhere near the output.
+  local function quote_location(s) return Engine.printable(s):sub(1, 80) end
   if page.upgrade then
     r.pass("https-redirect")
     notes[#notes + 1] = ("redirects (%d) to %s; headers are judged on the HTTPS port"):format(page.upgrade.status,
-      page.upgrade.location)
+      quote_location(page.upgrade.location))
   else
     if page.offsite then
-      notes[#notes + 1] = "redirects off-site to " .. page.offsite .. "; judging the redirect response"
+      notes[#notes + 1] = "redirects off-site to " .. quote_location(page.offsite)
+        .. "; judging the redirect response"
+    elseif page.badloc then
+      notes[#notes + 1] = ("unusable Location %s (%s); judging the redirect response")
+        :format(quote_location(page.badloc.location), page.badloc.why)
     elseif page.loop then
       notes[#notes + 1] = "redirect loop or limit reached; judging the last redirect response"
     elseif resp.status >= 300 and resp.status < 400 then

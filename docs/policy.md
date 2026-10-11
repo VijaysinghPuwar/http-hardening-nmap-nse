@@ -56,7 +56,7 @@ Every key is optional. `policies/policy.schema.json` is a JSON Schema for editor
 | `hsts.require_preload` | Turns on `hsts-no-preload` at least at LOW. The directive is checked, not list enrollment. |
 | `exposure.enabled` | Probe the built-in sensitive paths (see [checks](checks.md#exposure-opt-in)). |
 | `exposure.trace` | With exposure enabled, send one `TRACE /`. |
-| `exposure.paths` | Extra paths to probe, judged with soft-404 detection. Probed even when `enabled` is false. |
+| `exposure.paths` | Extra paths to probe, judged with soft-404 detection. Probed even when `enabled` is false, and before the built-in catalog, so a small `max_paths` does not drop them. |
 | `exposure.max_paths` | Upper bound on probed paths per port. |
 | `skip` | Finding IDs to suppress, for accepted risks. Prefer this over editing severities, so the decision is visible. |
 | `checks.<id>.severity` | Override the severity of one finding. |
@@ -64,7 +64,9 @@ Every key is optional. `policies/policy.schema.json` is a JSON Schema for editor
 
 ## Validation
 
-A policy with an unknown key, an unknown finding ID, a wrong type or an invalid severity is rejected. The script then reports `result: ERROR` with `error: policy-error` for every port instead of scanning with a policy you did not intend. A typo such as `csp-mising` never silently disables a check.
+A policy with an unknown key, an unknown finding ID, a wrong type or an invalid severity is rejected. The script then reports `result: ERROR` with `error: policy-error` for every port instead of scanning with a policy you did not intend. A typo such as `csp-mising` never silently disables a check. The document itself has to be a JSON object: `[]`, `null` or a bare number is refused rather than treated as an empty policy.
+
+Script arguments are validated the same way. `fail-on`, `skip`, `hsts-min` and `max-paths` report `policy-error`; `path` and `vhost`, which become part of a request, report `error: argument-error`. An invalid `timeout` falls back to the default instead of failing the scan.
 
 ## Precedence
 

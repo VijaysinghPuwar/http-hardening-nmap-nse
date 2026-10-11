@@ -9,15 +9,19 @@ make install        # .venv with hhc-report, pytest, ruff, mypy, jsonschema
 brew install luacheck   # or: apt-get install lua-check
 ```
 
+`make lint` also runs shellcheck, hadolint, actionlint, yamllint and bandit if they are
+installed, and reports each missing one as skipped. CI requires all of them, so install
+them before a pull request that touches shell scripts, Dockerfiles or workflows.
+
 ## Commands
 
 | Command | What it runs |
 |---|---|
-| `make lint` | luacheck, ruff (lint and format check), mypy strict |
+| `make lint` | luacheck, ruff (lint and format check), mypy strict, the text check, then shellcheck, hadolint, actionlint, yamllint and bandit |
 | `make unit` | Lua engine tests (`tests/unit`, no Nmap needed) |
 | `make reporter-test` | `hhc-report` tests, including SARIF schema validation |
 | `make integration` | Real Nmap against the Python lab and the Docker lab |
-| `make stress` | Status codes, odd headers, argument edge cases, parser fuzzing |
+| `make stress` | Status codes, odd headers, argument edge cases, parser fuzzing, engine invariants |
 | `make check` | All of the above |
 | `make demo` | Docker lab, scan, reports into `lab/docker/out/` |
 
@@ -26,7 +30,7 @@ brew install luacheck   # or: apt-get install lua-check
 1. Branch from `main`; one topic per pull request.
 2. A new check needs: an entry in `CHECKS` in the script, a lab target or unit test that triggers it, an exact-set assertion in the integration tests, a row in `docs/checks.md` (a unit test fails otherwise) and the ID in `policies/policy.schema.json`.
 3. A bug fix needs a regression test that fails without the fix.
-4. Run `make check` and `python3 scripts/check_text.py` before pushing. CI runs the same steps.
+4. Run `make check` before pushing. It includes the text check. CI runs the same steps.
 
 ## Code expectations
 

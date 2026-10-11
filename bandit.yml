@@ -1,0 +1,20 @@
+# bandit configuration. Every skip below is a decision, not an oversight.
+#
+# B404/B603/B607 (subprocess): the only subprocess calls are lab/server.py
+# generating a self-signed certificate with openssl and scripts/check_text.py
+# listing tracked files with git. Both pass fixed argument lists and no
+# external input.
+#
+# B405/B314 (xml.etree): hhc-report has no third-party dependencies on
+# purpose, so defusedxml is not an option. read_xml in
+# reporter/src/hhc_report/model.py hardens the standard library parser
+# instead: a size cap, UTF-8 only, no NUL bytes (which is how a UTF-16
+# document would smuggle a declaration past the byte search), and entity
+# declarations refused outright. Each of those rules has a test in
+# reporter/tests/test_model.py.
+skips:
+  - B314
+  - B404
+  - B405
+  - B603
+  - B607

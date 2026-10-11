@@ -1,0 +1,12 @@
+# Workflow files are long-lined by nature and use "on:", which yamllint's
+# truthy rule flags as a boolean key.
+extends: default
+
+rules:
+  line-length:
+    max: 140
+  truthy:
+    check-keys: false
+  document-start: disable
+  comments:
+    min-spaces-from-content: 1

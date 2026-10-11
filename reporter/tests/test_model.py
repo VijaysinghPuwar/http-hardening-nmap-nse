@@ -132,6 +132,27 @@ def test_bad_input_is_rejected(tmp_path: Path, content: str, message: str) -> No
         load([str(p)])
 
 
+@pytest.mark.parametrize("encoding", ["utf-16", "utf-16-be", "utf-16-le", "utf-32"])
+def test_entity_declarations_cannot_hide_in_another_encoding(tmp_path: Path, encoding: str) -> None:
+    # The entity check searches bytes, so a UTF-16 document used to slip past
+    # it, and ElementTree does expand internal entities.
+    doc = (
+        f'<?xml version="1.0" encoding="{encoding}"?>'
+        '<!DOCTYPE nmaprun [<!ENTITY a "aaaa">]><nmaprun>&a;</nmaprun>'
+    )
+    p = tmp_path / "bad.xml"
+    p.write_bytes(doc.encode(encoding))
+    with pytest.raises(InputError, match="NUL bytes"):
+        load([str(p)])
+
+
+def test_non_utf8_bytes_are_rejected(tmp_path: Path) -> None:
+    p = tmp_path / "latin1.xml"
+    p.write_bytes('<nmaprun version="7.95">caf\xe9</nmaprun>'.encode("latin-1"))
+    with pytest.raises(InputError, match="not UTF-8"):
+        load([str(p)])
+
+
 def test_missing_file() -> None:
     with pytest.raises(InputError, match="No such file"):
         load(["/nonexistent/scan.xml"])

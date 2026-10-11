@@ -4,14 +4,19 @@
 #   scan.sh report     reports only, from an existing /out/scan.xml
 set -eu
 
-TARGETS="hardened.lab weak.lab spa.lab mixed.lab"
+MODE="${1:-scan}"
 POLICY="${HHC_POLICY:-/opt/hhc/policies/baseline.json}"
 
-if [ "${1:-scan}" != "report" ]; then
+# The targets live in the positional parameters: POSIX sh has no arrays, and
+# this passes each host to nmap as its own argument without relying on word
+# splitting.
+set -- hardened.lab weak.lab spa.lab mixed.lab
+
+if [ "$MODE" != "report" ]; then
   nmap -Pn -sT -sV -p80,443 \
     --script /opt/hhc/http-hardening-check.nse \
     --script-args "http-hardening-check.policy=${POLICY},http-hardening-check.exposure=true,http-hardening-check.paths={/files/}" \
-    -oX /out/scan.xml $TARGETS
+    -oX /out/scan.xml "$@"
 fi
 
 # Reports record the gate decision for --fail-on high; exit code 1 (gate

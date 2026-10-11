@@ -9,7 +9,7 @@ from __future__ import annotations
 import hashlib
 import os
 import re
-import xml.etree.ElementTree as ET
+import xml.etree.ElementTree as ET  # hardened in read_xml; defusedxml would add a dependency
 from typing import Any
 
 from hhc_report import SCRIPT_ID, __version__
@@ -46,7 +46,11 @@ class InputError(Exception):
 
 def read_xml(path: str) -> ET.Element:
     """Parses Nmap XML, refusing entity declarations (Nmap never writes them),
-    so entity expansion attacks are not possible regardless of the parser."""
+    so entity expansion attacks are not possible regardless of the parser.
+
+    The input must be UTF-8 text, which is what Nmap writes. Without that rule
+    the byte search below would miss a declaration written in UTF-16 or UTF-32,
+    and ElementTree does expand internal entities."""
     try:
         size = os.path.getsize(path)
         if size > MAX_XML_BYTES:
@@ -57,12 +61,24 @@ def read_xml(path: str) -> ET.Element:
         raise InputError(f"{path}: {e.strerror or e}") from e
     if not data.strip():
         raise InputError(f"{path}: file is empty")
+    # A NUL byte means UTF-16 or UTF-32; those are valid UTF-8 byte sequences,
+    # so the decode check alone would not catch them.
+    if b"\x00" in data:
+        raise InputError(f"{path}: contains NUL bytes, so it is not Nmap XML output")
+    try:
+        data.decode("utf-8")
+    except UnicodeDecodeError as e:
+        raise InputError(f"{path}: not UTF-8, so not Nmap XML output ({e.reason})") from e
     if re.search(rb"<!ENTITY", data, re.IGNORECASE):
         raise InputError(f"{path}: XML entity declarations are not allowed")
     try:
         root = ET.fromstring(data)  # noqa: S314 - entities rejected above
     except ET.ParseError as e:
         raise InputError(f"{path}: not well-formed XML ({e})") from e
+    except ValueError as e:
+        # ElementTree raises this, not ParseError, for a declared encoding it
+        # cannot feed to the parser.
+        raise InputError(f"{path}: cannot be parsed as XML ({e})") from e
     if root.tag != "nmaprun":
         raise InputError(f"{path}: not Nmap XML output (root element is <{root.tag}>)")
     return root

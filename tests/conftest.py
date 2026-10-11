@@ -11,6 +11,7 @@ import shlex
 import shutil
 import subprocess
 import sys
+import xml.etree.ElementTree as ET
 from collections.abc import Callable, Iterator
 from pathlib import Path
 from typing import Any
@@ -53,16 +54,22 @@ def scan(lab: Any, tmp_path_factory: pytest.TempPathFactory) -> ScanFn:
     counter = iter(range(10_000))
 
     def _scan(
-        ports: str, script_args: str = "", service: bool = True, flags: tuple[str, ...] = ()
+        ports: str,
+        script_args: str = "",
+        service: bool = True,
+        flags: tuple[str, ...] = (),
+        target: str = "127.0.0.1",
     ) -> dict[str, Any]:
         out = tmp_path_factory.mktemp("scan") / f"scan-{next(counter)}.xml"
         script = SCRIPT if service else "+" + SCRIPT
         cmd = [*NMAP, "-Pn", "-sT", "-p", ports, "--script", script, "-oX", str(out), *flags]
+        if ":" in target:
+            cmd += ["-6", "-n"]
         if service:
             cmd += ["-sV", "--version-light"]
         if script_args:
             cmd += ["--script-args", script_args]
-        cmd.append("127.0.0.1")
+        cmd.append(target)
         proc = subprocess.run(cmd, capture_output=True, text=True, timeout=300, check=False)
         assert proc.returncode == 0, proc.stderr
         report = load([str(out)])
@@ -75,6 +82,14 @@ def scan(lab: Any, tmp_path_factory: pytest.TempPathFactory) -> ScanFn:
 
 def by_port(report: dict[str, Any]) -> dict[int, dict[str, Any]]:
     return {t["port"]: t for t in report["targets"]}
+
+
+def nmap_exit(report: dict[str, Any]) -> str:
+    """The exit attribute Nmap records in <runstats>. A fatal error there means
+    the whole scan was abandoned, not just this script."""
+    root = ET.parse(report["_xml"]).getroot()
+    finished = root.find("runstats/finished")
+    return "" if finished is None else str(finished.get("exit") or "")
 
 
 def ids(target: dict[str, Any]) -> set[str]:

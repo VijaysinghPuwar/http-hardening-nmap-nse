@@ -542,4 +542,87 @@ test("printable strips control characters", function()
   eq(E.printable("a\r\nb\0c"), "a b c")
 end)
 
+-- ---- argument hardening (stress findings) --------------------------------------
+-- Every value below reached string.format("%d", ...) or nsock and aborted the
+-- script or the whole Nmap run before these guards existed.
+
+test("to_integer accepts whole numbers only", function()
+  eq(E.to_integer("0"), 0)
+  eq(E.to_integer(42), 42)
+  eq(E.to_integer("15768000"), 15768000)
+  ok(not E.to_integer("abc"))
+  ok(not E.to_integer(""))
+  ok(not E.to_integer(nil))
+  ok(not E.to_integer("-1"))
+  ok(not E.to_integer("1.5"))
+  ok(not E.to_integer("1e400"))
+  ok(not E.to_integer(2 ^ 60))
+end)
+test("to_integer results are always safe for %d", function()
+  for _, v in ipairs({"0", "1", "999999999", 2 ^ 53}) do
+    local n = E.to_integer(v)
+    ok(n and pcall(string.format, "%d", n), tostring(v))
+  end
+end)
+test("clean_host refuses names OpenSSL rejects as an SNI value", function()
+  eq(E.clean_host(" app.example.com "), "app.example.com")
+  ok(not E.clean_host(""))
+  ok(not E.clean_host("   "))
+  ok(not E.clean_host("a b"))
+  ok(not E.clean_host("a\tb"))
+  ok(not E.clean_host(string.rep("a", 256)))
+  eq(E.clean_host(string.rep("a", 255)), string.rep("a", 255))
+end)
+test("authority brackets IPv6 literals (RFC 3986)", function()
+  eq(E.authority("example.com", 443), "example.com:443")
+  eq(E.authority("127.0.0.1", 80), "127.0.0.1:80")
+  eq(E.authority("::1", 8080), "[::1]:8080")
+  eq(E.authority("fe80::1%eth0", 80), "[fe80::1%eth0]:80")
+  eq(E.authority("[::1]", 80), "[::1]:80")
+end)
+test("parse_hsts keeps max-age an integer even when the server sends 23 digits", function()
+  local v = E.parse_hsts("max-age=" .. string.rep("9", 23))
+  ok(v, "huge max-age should still parse")
+  eq(math.type(v.max_age), "integer")
+  ok(pcall(string.format, "%d", v.max_age))
+  ok(v.max_age > 15768000)
+end)
+test("apply_policy rejects a document the decoder did not call an object", function()
+  for _, jtype in ipairs({"array", "null", "string", "number", "boolean"}) do
+    local p, why = E.apply_policy({}, jtype)
+    ok(not p, jtype .. " should be refused")
+    ok(why:find("JSON object"), why)
+  end
+  ok(E.apply_policy({}, "object"))
+  ok(E.apply_policy({}))
+end)
+
+-- ---- header values a proxy duplicated or padded --------------------------------
+
+test("X-Content-Type-Options sent twice still means nosniff", function()
+  -- Nmap joins repeated headers with ", "; Fetch reads the first value.
+  local _, r = judge(with(HARDENED, {["x-content-type-options"] = "nosniff, nosniff"}))
+  eq(#r.findings, 0, H.show(r.findings))
+  local ids = judge(with(HARDENED, {["x-content-type-options"] = " NoSniff "}))
+  eq(ids["xcto-missing"], nil)
+end)
+test("X-Content-Type-Options is judged on its first value", function()
+  eq(judge(with(HARDENED, {["x-content-type-options"] = "sniff, nosniff"}))["xcto-missing"], "LOW")
+  eq(judge(with(HARDENED, {["x-content-type-options"] = "nosniff; mode=block"}))["xcto-missing"], "LOW")
+end)
+test("a padded reflected Origin is still a reflected Origin", function()
+  local ids = judge(with(HARDENED, {
+    ["access-control-allow-origin"] = " " .. E.PROBE_ORIGIN .. " ",
+    ["access-control-allow-credentials"] = " True ",
+  }))
+  eq(ids["cors-reflected-credentials"], "HIGH")
+end)
+test("a padded CORS wildcard with credentials is still flagged", function()
+  local ids = judge(with(HARDENED, {
+    ["access-control-allow-origin"] = "  *  ",
+    ["access-control-allow-credentials"] = "true",
+  }))
+  eq(ids["cors-wildcard-credentials"], "LOW")
+end)
+
 os.exit(H.run() and 0 or 1)

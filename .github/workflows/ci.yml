@@ -30,6 +30,12 @@ jobs:
         run: |
           sudo apt-get update -qq && sudo apt-get install -y -qq lua-check
           python -m pip install -e "reporter[dev]"
+          python -m pip install bandit yamllint
+          curl -sSfL https://github.com/rhysd/actionlint/releases/download/v1.7.7/actionlint_1.7.7_linux_amd64.tar.gz \
+            | tar xz -C /usr/local/bin actionlint
+          curl -sSfL -o /usr/local/bin/hadolint \
+            https://github.com/hadolint/hadolint/releases/download/v2.14.0/hadolint-Linux-x86_64
+          chmod +x /usr/local/bin/hadolint
       - name: Lua lint
         run: luacheck http-hardening-check.nse tests/unit
       - name: Python lint and format
@@ -38,6 +44,16 @@ jobs:
           ruff format --check .
       - name: Type check
         run: mypy reporter/src
+      - name: Shell lint
+        run: shellcheck -S style lab/docker/scanner/scan.sh action/run.sh
+      - name: Dockerfile lint
+        run: hadolint lab/docker/*/Dockerfile
+      - name: Workflow and YAML lint
+        run: |
+          actionlint
+          yamllint -c .yamllint.yml .github/workflows/ci.yml action.yml lab/docker/docker-compose.yml
+      - name: Python security lint
+        run: bandit -q -c bandit.yml -r reporter/src action scripts lab
       - name: No em dashes
         run: python3 scripts/check_text.py
 

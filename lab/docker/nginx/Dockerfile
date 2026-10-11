@@ -1,6 +1,9 @@
 FROM nginx:1.27-alpine
 
 # Self-signed certificate generated at build time; no key is stored in the repo.
+# The base image tag is pinned; apk versions are not, because Alpine drops old
+# package versions from its index and that would break the lab build.
+# hadolint ignore=DL3018
 RUN apk add --no-cache openssl \
  && mkdir -p /etc/nginx/certs \
  && openssl req -x509 -newkey rsa:2048 -nodes -days 30 -subj "/CN=hardened.lab" \
